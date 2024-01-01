@@ -17,8 +17,8 @@ gcode = p2l.do("examples/patterntest.png", 10, 20, 0)
 grbl.preprocessor.do_fractionize_lines = False
 grbl.preprocessor.do_fractionize_arcs = False
 
-grbl.write("S0") # laser min
-grbl.write("M3") # laser on
+grbl.write("S0")  # laser min
+grbl.write("M3")  # laser on
 
 i = 0
 for feed in range(6000, 0, -1000):
@@ -26,8 +26,8 @@ for feed in range(6000, 0, -1000):
     grbl.write(t.translate(gcode, [0, i*1.8, 0]))
     i += 1
 
-grbl.write("S0") # laser min
-grbl.write("M5") # laser off
+grbl.write("S0")  # laser min
+grbl.write("M5")  # laser off
 
 self.set_target("simulator")
 grbl.job_run()

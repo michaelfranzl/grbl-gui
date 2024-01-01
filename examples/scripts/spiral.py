@@ -1,5 +1,3 @@
-# my cnctoolbox script!
-#
 t = gcodetools
 grbl = self.grbl
 
@@ -9,18 +7,14 @@ thickness = 1
 steps = 20
 
 gcodes = []
-
 gcodes.append("M3")
 gcodes.append("S0")
-
 gcodes.append("G0X0Y0")
-
 gcodes.append("F500")
-
 gcodes.append("G1")
 
-
 self.new_job()
+
 
 def spiral(cx, cy, r1, r2, windings, direction):
     gcode = []

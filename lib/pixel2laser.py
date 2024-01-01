@@ -22,6 +22,7 @@ from PIL import Image
 import math
 import logging
 
+
 def find_row_ranges(pix, width, height):
     '''
     Scans each pixel row and finds the index of the first and last
@@ -38,7 +39,6 @@ def find_row_ranges(pix, width, height):
     # The direction alternates between -1 and 1 for each row.
     # We start going left to right
     direction = 1
-
 
     for cy in range(height):
         # bitmap origin is top left, but CNC origin is bottom left
@@ -86,13 +86,9 @@ def find_row_ranges(pix, width, height):
         # alternate direction for next row
         direction *= -1
 
-        #logging.info("Row range of row %s: start_x=%s end_x=%s direction=%i", cy, start_x, end_x, -direction)
         result.append([start_x, end_x, -direction])
 
     return result
-
-
-
 
 def do(filename_in, dpmm=1, x_bleed=10, xcorr=0):
     # 300 dpi = 11.8 dpmm
@@ -151,13 +147,9 @@ def do(filename_in, dpmm=1, x_bleed=10, xcorr=0):
             # this row only contains white pixels, nothing to do for this row
             continue
 
-        #print("\n\n==========\nProcessing line", y, "start_x", start_x, "end_x", end_x, "direction", direction)
-
         for cx in range(start_x, end_x, direction):
-            s = pix[cx, y] # get intensity from pixel
-            s = 255 - s # invert, black pixels (0) are highest intensity (255) for laser
-
-            #print(" Pixel", cx, pix[cx, y], 255 - pix[cx, y])
+            s = pix[cx, y]  # get intensity from pixel
+            s = 255 - s  # invert, black pixels (0) are highest intensity (255) for laser
 
             if cx > 0 and cx < (width - 1) and pix[cx, y] == pix[cx + direction, y]:
                 # This is gcode optimzation for consecutive pixels of the
@@ -177,10 +169,14 @@ def do(filename_in, dpmm=1, x_bleed=10, xcorr=0):
             x2 = new_x * unit_length + direction * xcorr
             y2 = new_y * unit_length
             z2 = new_z * unit_length
-            if last_x != new_x: gcodeline += "X{:g} ".format(x2)
-            if last_y != new_y: gcodeline += "Y{:g} ".format(y2)
-            if last_z != new_z: gcodeline += "Z{:g} ".format(z2)
-            if last_s != new_s: gcodeline += "S{:g} ".format(new_s)
+            if last_x != new_x:
+                gcodeline += "X{:g} ".format(x2)
+            if last_y != new_y:
+                gcodeline += "Y{:g} ".format(y2)
+            if last_z != new_z:
+                gcodeline += "Z{:g} ".format(z2)
+            if last_s != new_s:
+                gcodeline += "S{:g} ".format(new_s)
             gcodeline += "\n"
             result += gcodeline
 
@@ -194,10 +190,10 @@ def do(filename_in, dpmm=1, x_bleed=10, xcorr=0):
         # the movement. Lasering should be done at constant speed for constant
         # burning (non-distorted grayscale) of material.
         # For this, we have to look ahead at the x_start and x_end of the next row.
-        nxs = None # next x_start
-        nxe = None # next x_end
-        ny = None # next y
-        nd = None # next direction
+        nxs = None  # next x_start
+        nxe = None  # next x_end
+        ny = None  # next y
+        nd = None  # next direction
 
         for j in range(cy + 1, height):
             # find the next non-empty row
@@ -222,7 +218,9 @@ def do(filename_in, dpmm=1, x_bleed=10, xcorr=0):
 
         x_clear = unit_length * furthest_x + (direction * x_bleed)
 
-        # below we are going to draw approximately tangential circles to ease out the current X movement without any significant y movement at the beginning of the circle.
+        # below we are going to draw approximately tangential circles
+        # to ease out the current X movement without any significant
+        # y movement at the beginning of the circle.
 
         arcmode = 3 if direction == 1 else 2
 
@@ -237,22 +235,19 @@ def do(filename_in, dpmm=1, x_bleed=10, xcorr=0):
             arc_radius_out = radius_factor * (last_x - x_clear) * unit_length
             arc_radius_in = radius_factor * (nxs - x_clear) * unit_length
 
-        #result += "G{:g} X{:g} Y{:g} R{:f} S0\n".format(arcmode, x_clear, middle_y * unit_length, arc_radius_out * unit_length)
-        #result += "G{:g} X{:g} Y{:g} R{:f} S0\n".format(arcmode, (nxs + direction) * unit_length, ny * unit_length, arc_radius_in * unit_length)
         result += ";_gerbil bleed begin\n"
         result += "G0 X{:g} Y{:g} S0\n".format(x_clear, middle_y * unit_length)
         offset = 1 if direction == 1 else 0
         result += "G0 X{:g} Y{:g} S0\n".format(direction * xcorr + (nxs + offset) * unit_length, ny * unit_length)
         result += ";_gerbil bleed end\n"
 
-        last_s = None # invalidate last S for next row processing
-        last_x = None # invalidate last X for next row processing
+        last_s = None  # invalidate last S for next row processing
+        last_x = None  # invalidate last X for next row processing
 
         result += "G1\n"
 
-
     # gcode postamble
     out_x = float(unit_length * last_x + direction * x_bleed)
-    result += "G0 X{:f} S0\n".format(out_x) # last easing out movement
+    result += "G0 X{:f} S0\n".format(out_x)  # last easing out movement
 
     return result.split('\n')

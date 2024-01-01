@@ -9,8 +9,7 @@ cat = t.read("examples/gcode/cat.ngc")
 
 scaled_origin_cat = t.to_origin(t.scale_factor(cat, [0.2, 0.2, 0]))
 
-
-for i in range(0,200,25):
+for i in range(0, 200, 25):
     for j in range(0, 200, 25):
         x = 1 if j % 2 == 0 else 0
         if i % 2 == x:
@@ -18,7 +17,6 @@ for i in range(0,200,25):
             print("\nProcessing", i, j)
             grbl.write("\n".join(gcode))
 
-
-grbl.preprocessor.vars = {"1":0}
+grbl.preprocessor.vars = {"1": 0}
 self.set_target("simulator")
 grbl.job_run()

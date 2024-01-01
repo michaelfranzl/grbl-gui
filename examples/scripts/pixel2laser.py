@@ -12,13 +12,13 @@ grbl.buffer = []
 self.new_job()
 
 gcode = p2l.do("examples/patterntest.png", 10, 20, 0)
-#gcode = p2l.do("examples/gradient.png", 10, 20, 0)
+# gcode = p2l.do("examples/gradient.png", 10, 20, 0)
 
 grbl.preprocessor.do_fractionize_lines = False
 grbl.preprocessor.do_fractionize_arcs = False
 
-grbl.write("S0") # laser min
-grbl.write("M3") # laser on
+grbl.write("S0")  # laser min
+grbl.write("M3")  # laser on
 grbl.write(gcode)
 
 self.set_target("simulator")

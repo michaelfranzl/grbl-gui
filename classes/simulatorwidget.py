@@ -24,9 +24,6 @@ import numpy as np
 
 from pyglpainter.classes.painterwidget import PainterWidget
 
-from PyQt5.QtGui import QVector3D
-
-import OpenGL
 from OpenGL.GL import *
 
 
@@ -43,7 +40,6 @@ class SimulatorWidget(PainterWidget):
             "G59": (0, 0, 0)
             }
 
-
     def draw_heightmap(self, pos_col, dim, origin):
         if "myheightmap" in self.programs["heightmap"].items:
             # update
@@ -59,7 +55,6 @@ class SimulatorWidget(PainterWidget):
 
     def remove_heightmap(self):
         self.item_remove("myheightmap")
-
 
     def initializeGL(self):
         super(SimulatorWidget, self).initializeGL()
@@ -107,7 +102,6 @@ class SimulatorWidget(PainterWidget):
         self.item_create("Star", "buffermarker", "simple3d", (0,0,0), 2)
         self.dirty = True
 
-
     def cleanup_stage(self):
         item_keys = self.programs["simple3d"].items.keys()
 
@@ -122,13 +116,11 @@ class SimulatorWidget(PainterWidget):
 
         self.dirty = True
 
-
     def draw_coordinate_system(self, key, tpl_origin):
         self.cs_offsets[key] = tpl_origin
         cskey = "cs" + key
 
         if cskey in self.programs["simple3d"].items:
-            #update
             self.programs["simple3d"].items[cskey].set_origin(tpl_origin)
         else:
             # create
@@ -136,7 +128,6 @@ class SimulatorWidget(PainterWidget):
 
         txtkey = "txtcs" + key
         if txtkey in self.programs["simple3d"].items:
-            #update
             self.programs["simple3d"].items[txtkey].set_origin(tpl_origin)
         else:
             # create
@@ -144,7 +135,6 @@ class SimulatorWidget(PainterWidget):
             text.billboard = True
 
         self.dirty = True
-
 
     def draw_gcode(self, gcode, cmpos, ccs, do_fractionize_arcs=True):
         if "gcode" in self.programs["simple3d"].items:
@@ -155,7 +145,6 @@ class SimulatorWidget(PainterWidget):
         self.item_create("GcodePath", "gcode", "simple3d", gcode, cmpos, ccs, self.cs_offsets, do_fractionize_arcs)
         #self.programs["simple3d"].items["gcode"] = GcodePath("gcode", self.program, gcode, cwpos, ccs, self.cs_offsets)
         self.dirty = True
-
 
     def put_buffer_marker_at_line(self, line_number):
         #print("putting buffermarker at line {}".format(line_number))
@@ -168,10 +157,8 @@ class SimulatorWidget(PainterWidget):
 
             self.dirty = True
 
-
     def get_buffer_marker_pos(self):
         return self.programs["simple3d"].items["buffermarker"].origin
-
 
     def draw_tool(self, cmpos):
         if "tool" in self.programs["simple3d"].items:
@@ -179,7 +166,16 @@ class SimulatorWidget(PainterWidget):
             self.programs["simple3d"].items["tool"].set_origin(cmpos)
         else:
             # tool not yet created. create it and move it cmpos
-            i = self.item_create("Item", "tool", "simple3d", GL_LINES, 7, (0,0,0), 1, False, 2)
+            i = self.item_create(
+                    "Item",
+                    "tool",
+                    "simple3d",
+                    GL_LINES,
+                    7,
+                    (0, 0, 0),
+                    1,
+                    False,
+                    2)
             i.append_vertices([[(0, 0, 0), (1, 1, 1, .5)]])
             i.append_vertices([[(0, 0, 200), (1, 1, 1, .2)]])
             i.upload()
@@ -193,12 +189,20 @@ class SimulatorWidget(PainterWidget):
             #tr.substitute(vertex_nr, cmpos, )
         else:
             # create new
-            tr = self.item_create("Item", "tracer", "simple3d", GL_LINE_STRIP, 1, (0,0,0), 1, False, 1000000)
+            tr = self.item_create(
+                    "Item",
+                    "tracer",
+                    "simple3d",
+                    GL_LINE_STRIP,
+                    1,
+                    (0, 0, 0),
+                    1,
+                    False,
+                    1000000)
             tr.append_vertices([[cmpos, (1, 1, 1, 0.2)]])
             tr.upload()
 
         self.dirty = True
-
 
     def draw_workpiece(self, dim=(100, 100, 10), offset=(0, 0, 0)):
         off = np.add((-800, -1400, dim[2]), offset)

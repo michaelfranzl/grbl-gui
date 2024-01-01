@@ -1,15 +1,11 @@
 from PyQt5 import QtCore, QtGui
-from PyQt5.QtCore import pyqtSignal, QPoint, QSize, Qt, QCoreApplication, QTimer
 from PyQt5.QtGui import QColor
-from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QMessageBox, QSlider, QLabel, QPushButton, QWidget, QDialog, QMainWindow, QFileDialog, QLineEdit, QSpacerItem, QListWidgetItem)
 
 class Highlighter(QtGui.QSyntaxHighlighter):
     def __init__(self, parent=None):
-        super(Highlighter, self).__init__(parent)
+        super().__init__(parent)
 
         self.highlightingRules = []
-
-
 
         numberFormat = QtGui.QTextCharFormat()
         numberFormat.setForeground(QColor(174,129,255))
@@ -23,8 +19,6 @@ class Highlighter(QtGui.QSyntaxHighlighter):
         classFormat.setForeground(QtCore.Qt.magenta)
         self.highlightingRules.append((QtCore.QRegExp("\\bQ[A-Za-z]+\\b"),
                 classFormat))
-
-
 
         quotationFormat = QtGui.QTextCharFormat()
         quotationFormat.setForeground( QColor(230,219,116) )
@@ -40,8 +34,6 @@ class Highlighter(QtGui.QSyntaxHighlighter):
         keywordFormat = QtGui.QTextCharFormat()
         keywordFormat.setForeground(QColor(249,38,114))
         keywordFormat.setFontWeight(QtGui.QFont.Bold)
-
-
 
         keywordPatterns = ["\\bclass\\b","\\bdef\\b","\\bsuper\\b",
         "\\bNone\\b","\\bFalse\\b","\\bTrue\\b","\\bself\\b","\\breturn\\b",

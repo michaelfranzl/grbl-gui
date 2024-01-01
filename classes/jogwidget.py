@@ -1,5 +1,5 @@
-from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QWidget
+
 
 class JogWidget(QWidget):
     def __init__(self, parent, callback):
@@ -20,7 +20,6 @@ class JogWidget(QWidget):
     def onIdle(self):
         self._z_accumulator = 0
 
-
     def mousePressEvent(self, event):
         pos = event.pos()
         self._x_start_screen = pos.x()
@@ -28,14 +27,12 @@ class JogWidget(QWidget):
         self._relative_origin_x = self.wx_current
         self._relative_origin_y = self.wy_current
 
-
     def mouseReleaseEvent(self, event):
         """
         Safe Feed
         """
         pass
         #self.callback("F111")
-
 
     def wheelEvent(self, event):
         delta = event.angleDelta().y()

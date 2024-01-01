@@ -19,7 +19,8 @@ along with pyglpainter. If not, see <https://www.gnu.org/licenses/>.
 """
 
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import (QLineEdit)
+from PyQt5.QtWidgets import QLineEdit
+
 
 class CommandLineEdit(QLineEdit):
     def __init__(self, parent, callback):

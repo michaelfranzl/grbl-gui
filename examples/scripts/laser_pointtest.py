@@ -10,7 +10,7 @@ point_distance = 3
 
 self.new_job()
 gcodes = []
-gcodes.append("G91") # relative distances
+gcodes.append("G91")  # relative distances
 
 # turn laser off
 gcodes.append("S0")

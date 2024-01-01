@@ -5,7 +5,6 @@ grbl = self.grbl
 
 text_gcodes = t.hersheyToGcode("Hello World!", "scripts")
 
-
 rotated_gcodes = []
 for angle in range(0, 160, 30):
     rotated_gcodes += t.rotate2D(text_gcodes, [-100, 0], angle)
