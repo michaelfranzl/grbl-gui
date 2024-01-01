@@ -157,12 +157,6 @@ class SimulatorWidget(PainterWidget):
         self.dirty = True
 
 
-    def highlight_gcode_line(self, line_number):
-        if "gcode" in self.programs["simple3d"].items:
-            self.programs["simple3d"].items["gcode"].highlight_line(line_number)
-        self.dirty = True
-
-
     def put_buffer_marker_at_line(self, line_number):
         #print("putting buffermarker at line {}".format(line_number))
         if "gcode" in self.programs["simple3d"].items:

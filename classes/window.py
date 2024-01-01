@@ -846,8 +846,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         elif event == "on_line_sent":
             line_number = data[0]
-            # line_str = data[1]
-            self.sim_dialog.simulator_widget.highlight_gcode_line(line_number)
             self._put_buffer_marker_at_line_nr = line_number
 
         elif event == "on_standstill":
