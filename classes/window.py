@@ -50,7 +50,6 @@ from lib import pixel2laser
 from scipy.interpolate import griddata
 
 
-
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, path, baud):
         super(MainWindow, self).__init__()

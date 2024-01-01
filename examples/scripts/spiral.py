@@ -20,10 +20,7 @@ def spiral(cx, cy, r1, r2, windings, direction):
     gcode = []
     steps_per_winding = 100
 
-    if direction == 1:
-        r = r1
-    else:
-        r = r2
+    r = r1 if direction == 1 else r2
 
     r_inc = direction * (r2 - r1) / windings / steps_per_winding
 

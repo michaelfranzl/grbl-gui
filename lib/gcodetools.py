@@ -29,11 +29,13 @@ from . import hersheydata
 
 def read(fname):
     with open(fname, 'r') as f:
-        return [l.strip() for l in f.readlines()]
+        return [line.strip() for line in f.readlines()]
+
 
 def write(fname, contents):
     with open(fname, 'w') as f:
         f.write(contents)
+
 
 def to_origin(gcode):
     bb = bbox(gcode)
@@ -41,6 +43,7 @@ def to_origin(gcode):
     ymin = bb[1][0]
     translated_gcode = translate(gcode, [-xmin, -ymin, 0])
     return translated_gcode
+
 
 def scale_into(gcode, width, height, depth, scale_zclear=False):
     bb = bbox(gcode)
@@ -66,11 +69,15 @@ def scale_into(gcode, width, height, depth, scale_zclear=False):
         d = zmax - zmin
         fac_z = depth / d
 
-    scaled_gcode = scale_factor(translated_gcode, [fac_x, fac_y, fac_z], scale_zclear)
+    scaled_gcode = scale_factor(
+            translated_gcode,
+            [fac_x, fac_y, fac_z],
+            scale_zclear)
+
     return scaled_gcode
 
-# returns string
-def bbox_draw(gcode, move_z=False):
+
+def bbox_draw(gcode):
     result = ""
 
     bb = bbox(gcode)
@@ -78,11 +85,6 @@ def bbox_draw(gcode, move_z=False):
     xmax = bb[0][1]
     ymin = bb[1][0]
     ymax = bb[1][1]
-    zmin = bb[2][0]
-    zmax = bb[2][1]
-
-    if move_z:
-        pass
 
     result += "G0X{:0.1f}Y{:0.1f}\n".format(xmin, ymin)
     result += "M0\n"
@@ -102,7 +104,6 @@ def bbox_draw(gcode, move_z=False):
     return result
 
 
-# returns list
 def translate(lines, offsets=[0, 0, 0]):
     logger = logging.getLogger('gerbil')
 
@@ -113,11 +114,10 @@ def translate(lines, offsets=[0, 0, 0]):
     replace_regexps = []
     for i in range(0, 3):
         axis = axes[i]
-        contains_regexps.append(re.compile(".*" + axis + "([-.\d]+)"))
-        replace_regexps.append(re.compile(r"" + axis + "[-.\d]+"))
+        contains_regexps.append(re.compile(".*" + axis + r"([-.\d]+)"))
+        replace_regexps.append(re.compile(r"" + axis + r"[-.\d]+"))
 
     for line in lines:
-
         if "G91" in line:
             logger.error("gcodetools.translate: It does not make sense to translate movements in G91 distance mode. Aborting at line {}".format(line))
             return
@@ -141,13 +141,9 @@ def translate(lines, offsets=[0, 0, 0]):
 
 
 def rotate2D(lines, anchor, angle):
-
     angle = math.radians(angle)
 
     result = []
-    _re_motion_mode = re.compile("(G[0123])([^\d]|$)")
-    _current_motion_mode = None
-
     re_allcomments_remove = re.compile(";.*")
 
     words = ["X", "Y", "I", "J"]
@@ -155,17 +151,13 @@ def rotate2D(lines, anchor, angle):
     replace_regexps = []
     for i in range(0, 3):
         word = words[i]
-        contains_regexps.append(re.compile(".*" + word + "([-.\d]+)"))
-        replace_regexps.append(re.compile(r"" + word + "[-.\d]+"))
+        contains_regexps.append(re.compile(".*" + word + r"([-.\d]+)"))
+        replace_regexps.append(re.compile(r"" + word + r"[-.\d]+"))
 
     x = 0
     y = 0
     for line in lines:
-        line = re.sub(re_allcomments_remove, "", line) # replace comments
-
-        m = re.match(_re_motion_mode, line)
-        if m:
-            _current_motion_mode = m.group(1)
+        line = re.sub(re_allcomments_remove, "", line)  # replace comments
 
         match_x = re.match(contains_regexps[0], line)
         if match_x:
@@ -187,47 +179,40 @@ def rotate2D(lines, anchor, angle):
         line = re.sub(replace_regexps[0], rep_x, line)
         line = re.sub(replace_regexps[1], rep_y, line)
 
-        if not match_x: line += rep_x
-        if not match_y: line += rep_y
+        if not match_x:
+            line += rep_x
+        if not match_y:
+            line += rep_y
 
         result.append(line)
     return result
 
 
-
-# returns list
 def scale_factor(lines, facts=[1, 1, 1], scale_zclear=False):
     result = []
 
-    logger = logging.getLogger('gerbil')
+    logger = logging.getLogger('grbl-gui')
 
     if facts[0] != facts[1] or facts[0] != facts[2] or facts[1] != facts[2]:
         logger.warning("gcodetools.scale_factor: Circles will stay circles even with inhomogeous scale factor ".format(facts))
-
-    _re_motion_mode = re.compile("(G[0123])([^\d]|$)")
-    _current_motion_mode = None
 
     words = ["X", "Y", "Z", "I", "J", "K", "R"]
     contains_regexps = []
     replace_regexps = []
     for i in range(0, 7):
         word = words[i]
-        contains_regexps.append(re.compile(".*" + word + "([-.\d]+)"))
-        replace_regexps.append(re.compile(r"" + word + "[-.\d]+"))
+        contains_regexps.append(re.compile(".*" + word + r"([-.\d]+)"))
+        replace_regexps.append(re.compile(r"" + word + r"[-.\d]+"))
 
     for line in lines:
         for i in range(0, 7):
-            m = re.match(_re_motion_mode, line)
-            if m:
-                _current_motion_mode = m.group(1)
-
             word = words[i]
             cr = contains_regexps[i]
             rr = replace_regexps[i]
             factor = facts[(i % 3)]
 
             m = re.match(cr, line)
-            if m and facts[i % 3] != 0 and not ("_zclear" in line and scale_zclear == False):
+            if m and facts[i % 3] != 0 and not ("_zclear" in line and not scale_zclear):
                 val = float(m.group(1))
                 val *= factor
                 rep = "{}{:0.3f}".format(word, val)
@@ -238,7 +223,6 @@ def scale_factor(lines, facts=[1, 1, 1], scale_zclear=False):
     return result
 
 
-# returns list
 def bbox(gcode):
     bb = []
 
@@ -247,7 +231,7 @@ def bbox(gcode):
 
     for i in range(0, 3):
         axis = axes[i]
-        contains_regexps.append(re.compile(".*" + axis + "([-.\d]+)"))
+        contains_regexps.append(re.compile(".*" + axis + r"([-.\d]+)"))
         bb.append([9999, -9999])
 
     for line in gcode:
@@ -266,7 +250,6 @@ def bbox(gcode):
     return bb
 
 
-
 def bumpify(gcode_list, cwpos, probe_points, probe_values):
     print("bumpify start")
     logger = logging.getLogger('gerbil')
@@ -281,14 +264,15 @@ def bumpify(gcode_list, cwpos, probe_points, probe_values):
     # precompile regular expressions for speed increase
     for i in range(0, 3):
         axis = axes[i]
-        re_axis_values.append(re.compile(".*" + axis + "([-.\d]+)"))
-        re_axis_replace.append(re.compile(r"" + axis + "[-.\d]+"))
+        re_axis_values.append(re.compile(".*" + axis + r"([-.\d]+)"))
+        re_axis_replace.append(re.compile(r"" + axis + r"[-.\d]+"))
 
-    # first, collect xy coords per line, because all of them will be interpolated at once
+    # first, collect xy coords per line, because all of them will be
+    # interpolated at once
     coords_xy = [None]*len(gcode_list)
     for nr in range(0, len(gcode_list)):
         line = gcode_list[nr]
-        line = re.sub(re_allcomments_remove, "", line) # replace comments
+        line = re.sub(re_allcomments_remove, "", line)  # replace comments
 
         if "G91" in line:
             logger.error("gcodetools.bumpify: G91 distance mode is not supported. Aborting at line {}".format(line))
@@ -298,7 +282,7 @@ def bumpify(gcode_list, cwpos, probe_points, probe_values):
             logger.error("gcodetools.bumpify: Switching coordinate systems is not supported. Aborting at line {}".format(line))
             return
 
-        for i in range(0, 2): # only loop over x and y
+        for i in range(0, 2):  # only loop over x and y
             axis = axes[i]
             rv = re_axis_values[i]
             m = re.match(rv, line)
@@ -307,11 +291,6 @@ def bumpify(gcode_list, cwpos, probe_points, probe_values):
                 position[i] = a
 
         coords_xy[nr] = [position[0], position[1]]
-
-    #print("parsed coords", coords_xy)
-
-
-    print("bumpify interpol")
 
     # see http://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.griddata.html
     interpolated_z = griddata(
@@ -323,16 +302,14 @@ def bumpify(gcode_list, cwpos, probe_points, probe_values):
     z_at_xy_origin = griddata(
         probe_points,
         probe_values,
-        [0,0],
+        [0, 0],
         method='cubic')[0]
-
-    #print("interpolated", interpolated_z)
 
     # next add/substitute Z values
     current_z = cwpos[2]
     for nr in range(0, len(gcode_list)):
         line = gcode_list[nr]
-        line = re.sub(re_allcomments_remove, "", line) # remove comments
+        line = re.sub(re_allcomments_remove, "", line)  # remove comments
 
         axis = axes[2]
         rv = re_axis_values[2]
@@ -352,51 +329,45 @@ def bumpify(gcode_list, cwpos, probe_points, probe_values):
 
         gcode_list[nr] = line
 
-    #print("FINI", gcode_list)
-    print("bumpify done")
     return gcode_list
 
 
-
-"""
-Fonts available in hershedata.py:
-
-standard    Standard
-
-futural     Sans 1-stroke
-futuram     Sans bold
-
-gothiceng   Gothic English
-gothicger   Gothic German
-gothicita   Gothic Italian
-
-greek       Greek 1-stroke
-timesg      Greek medium
-japanese    Japanese
-cyrillic    Cyrillic
-
-astrology   Astrology
-markers     Markers
-mathlow     Math (lower)
-mathupp     Math (upper)
-meteorology Meteorology
-music       Music
-symbolic    Symbolic
-
-cursive     Script 1-stroke (alt)
-scriptc     Script medium
-scripts     Script 1-stroke
-
-timesi      Serif medium italic
-timesib     Serif bold italic
-timesr      Serif medium
-timesrb     Serif bold
-"""
-
 def hersheyToGcode(string, font='standard', z_depth=0, z_safe=3):
-    fontdata = eval('hersheydata.' + font)
+    """
+    Fonts available in hershedata.py:
 
-    #regexp = re.compile("([ML].+?)")
+    standard    Standard
+
+    futural     Sans 1-stroke
+    futuram     Sans bold
+
+    gothiceng   Gothic English
+    gothicger   Gothic German
+    gothicita   Gothic Italian
+
+    greek       Greek 1-stroke
+    timesg      Greek medium
+    japanese    Japanese
+    cyrillic    Cyrillic
+
+    astrology   Astrology
+    markers     Markers
+    mathlow     Math (lower)
+    mathupp     Math (upper)
+    meteorology Meteorology
+    music       Music
+    symbolic    Symbolic
+
+    cursive     Script 1-stroke (alt)
+    scriptc     Script medium
+    scripts     Script 1-stroke
+
+    timesi      Serif medium italic
+    timesib     Serif bold italic
+    timesr      Serif medium
+    timesrb     Serif bold
+    """
+    fontdata = eval('hersheydata.' + font)
 
     letter_vals = [ord(q) - 32 for q in string]
 
@@ -404,15 +375,12 @@ def hersheyToGcode(string, font='standard', z_depth=0, z_safe=3):
     offset_x = 0
 
     for i in letter_vals:
-        # Ignore unavailable Letters except german umlaute
-        #if (q == 164 or q == 182 or q == 188 or q == 191 or q == 196 or q == 214 or q == 220 or 0 <= q < 93):
         char_path = fontdata[i]
 
         size_match = re.match('^([-0-9.]+) ([-0-9.]+)', char_path)
         size1 = float(size_match.groups(0)[0])
         size2 = float(size_match.groups(0)[1])
         print("SIZE", size1, size2)
-
 
         offset_x -= size1
 
@@ -456,15 +424,5 @@ def hersheyToGcode(string, font='standard', z_depth=0, z_safe=3):
             gcodelist.append(gcode)
 
         offset_x += size2
+
     return gcodelist
-
-
-
-if __name__ == "__main__":
-    rotated = []
-    gcode = ["G0X0Y0", "G1X100", "G1Y20"]
-    for angle in range(0, 95, 5):
-        rotated += rotate2D(gcode, [20,10], math.radians(angle))
-    with open('/tmp/test.ngc', 'w') as f: f.write("\n".join(rotated))
-
-

@@ -19,7 +19,6 @@ along with pyglpainter. If not, see <https://www.gnu.org/licenses/>.
 """
 
 from PIL import Image
-import math
 import logging
 
 
@@ -185,15 +184,15 @@ def do(filename_in, dpmm=1, x_bleed=10, xcorr=0):
             last_z = new_z
             last_s = new_s
 
-        # After lasering the last pixel, continue going into the same direction for
-        # the distance of x_bleed, so that GRBL's inertia control doesn't slow down
-        # the movement. Lasering should be done at constant speed for constant
-        # burning (non-distorted grayscale) of material.
-        # For this, we have to look ahead at the x_start and x_end of the next row.
+        # After lasering the last pixel, continue going into the same direction
+        # for the distance of x_bleed, so that GRBL's inertia control doesn't
+        # slow down the movement. Lasering should be done at constant speed
+        # for constant burning (non-distorted grayscale) of material.
+        # For this, we have to look ahead at the x_start and x_end of the next
+        # row.
         nxs = None  # next x_start
         nxe = None  # next x_end
         ny = None  # next y
-        nd = None  # next direction
 
         for j in range(cy + 1, height):
             # find the next non-empty row
@@ -201,7 +200,6 @@ def do(filename_in, dpmm=1, x_bleed=10, xcorr=0):
             if nxs is not None and nxe is not None:
                 # found next y!
                 ny = j
-                ndir = dctn
                 break
 
         if nxs is None and nxe is None:
@@ -218,28 +216,29 @@ def do(filename_in, dpmm=1, x_bleed=10, xcorr=0):
 
         x_clear = unit_length * furthest_x + (direction * x_bleed)
 
-        # below we are going to draw approximately tangential circles
-        # to ease out the current X movement without any significant
-        # y movement at the beginning of the circle.
+        # # below we are going to draw approximately tangential circles
+        # # to ease out the current X movement without any significant
+        # # y movement at the beginning of the circle.
+        # arcmode = 3 if direction == 1 else 2
 
-        arcmode = 3 if direction == 1 else 2
+        # # The following code is based on trial-and-error which leads to good results
+        # # in the GRBL simulator. Circles could be made exactly tangential to the
+        # # pixel rows, but I require more arc gcode studying.
+        # radius_factor = 7
+        # if direction == 1:
+        #     arc_radius_out = radius_factor * (x_clear - last_x) * unit_length
+        #     arc_radius_in = radius_factor * (x_clear - nxs) * unit_length
+        # else:
+        #     arc_radius_out = radius_factor * (last_x - x_clear) * unit_length
+        #     arc_radius_in = radius_factor * (nxs - x_clear) * unit_length
 
-        # The following code is based on trial-and-error which leads to good results
-        # in the GRBL simulator. Circles could be made exactly tangential to the
-        # pixel rows, but I require more arc gcode studying.
-        radius_factor = 7
-        if direction == 1:
-            arc_radius_out = radius_factor * (x_clear - last_x) * unit_length
-            arc_radius_in = radius_factor * (x_clear - nxs) * unit_length
-        else:
-            arc_radius_out = radius_factor * (last_x - x_clear) * unit_length
-            arc_radius_in = radius_factor * (nxs - x_clear) * unit_length
-
-        result += ";_gerbil bleed begin\n"
+        result += ";bleed begin\n"
         result += "G0 X{:g} Y{:g} S0\n".format(x_clear, middle_y * unit_length)
         offset = 1 if direction == 1 else 0
-        result += "G0 X{:g} Y{:g} S0\n".format(direction * xcorr + (nxs + offset) * unit_length, ny * unit_length)
-        result += ";_gerbil bleed end\n"
+        result += "G0 X{:g} Y{:g} S0\n".format(
+                direction * xcorr + (nxs + offset) * unit_length,
+                ny * unit_length)
+        result += ";bleed end\n"
 
         last_s = None  # invalidate last S for next row processing
         last_x = None  # invalidate last X for next row processing
