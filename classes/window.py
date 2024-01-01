@@ -1158,9 +1158,12 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def _save_script_as(self):
         filename_tuple = QFileDialog.getSaveFileName(self, "Save Script", self._open_script_location)
         fname = filename_tuple[0]
-        if fname == "": return
+        if fname == "":
+            return
+
         with open(fname, 'w') as content_file:
             content_file.write(self.plainTextEdit_script.toPlainText())
+
         self._add_to_loginput("File {} written.".format(fname))
         self.label_script_filename.setText(os.path.basename(fpath))
 
@@ -1336,8 +1339,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         print("_variables_edited", row, col)
         d = self._var_table_to_dict()
         self.grbl.preprocessor.vars = d
-
-    # UTILITY FUNCTIONS
 
     def _var_table_to_dict(self):
         row_count = self.tableWidget_variables.rowCount()
