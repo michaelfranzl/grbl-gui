@@ -28,7 +28,7 @@ import time
 from classes.session import Session
 from classes.svg import SVG
 
-from gerbil.gerbil import Gerbil
+from grbl_streamer import GrblStreamer
 
 from lib import stipple
 from lib import pixel2laser as p2l
@@ -232,7 +232,7 @@ def main():
         f.close()
 
     elif subcmd == "stream":
-        grbl = Gerbil("grbl1", args.dev_node)
+        grbl = GrblStreamer("grbl1", args.dev_node)
         grbl.cnect()
         time.sleep(1)
         src = "out.ngc"

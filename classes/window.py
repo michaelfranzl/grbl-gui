@@ -33,9 +33,8 @@ from classes.highlighter import Highlighter
 from classes.jogwidget import JogWidget
 from classes.commandlineedit import CommandLineEdit
 from classes.simulatordialog import SimulatorDialog
-from gerbil.gerbil import Gerbil
-from gcode_machine.gcode_machine import GcodeMachine
-from gerbil.callbackloghandler import CallbackLogHandler
+from grbl_streamer import GrblStreamer
+from gcode_machine import GcodeMachine
 
 from PyQt5 import QtCore, QtGui
 from PyQt5.QtCore import pyqtSignal, QPoint, QSize, Qt, QCoreApplication, QTimer, QSettings
@@ -178,7 +177,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
         # GRBL SETUP BEGIN -----
-        self.grbl = Gerbil(self.on_grbl_event)
+        self.grbl = GrblStreamer(self.on_grbl_event)
         self.grbl.setup_logging()
         self.grbl.poll_interval = 0.15
         #self.grbl.cnect()
