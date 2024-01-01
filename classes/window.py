@@ -332,15 +332,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         print("Exiting normally...")
         self.grbl.disconnect()
         self.sim_dialog.close()
-        #event.ignore()
         event.accept()
 
     # =log(self.grbl.travel_dist_buffer)
     def log(self, msg, color="black"):
         self._add_to_loginput(msg, color)
-
-    #def conosole_log(self, msg):
-
 
     def new_job(self):
         self.job_run_timestamp = time.time()
@@ -348,8 +344,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.spinBox_start_line.setValue(0)
         self.sim_dialog.simulator_widget.cleanup_stage()
 
-
-    # modify whatever was hardcoded in the Qt Form Editor
+    # HACK: modify whatever was hardcoded in the Qt Form Editor
     def modifyUi(self):
         self.pushButton_homing.setStyleSheet("background-color: rgb(102,217,239);")
         self.pushButton_resume.setStyleSheet("background-color: rgb(166,226,46);")
