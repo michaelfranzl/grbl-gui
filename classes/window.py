@@ -29,7 +29,6 @@ import re
 
 import random
 
-from classes.highlighter import Highlighter
 from classes.jogwidget import JogWidget
 from classes.commandlineedit import CommandLineEdit
 from classes.simulatordialog import SimulatorDialog
@@ -364,7 +363,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         p = self.plainTextEdit_script.palette();
 
         self.plainTextEdit_script.setStyleSheet("QPlainTextEdit { background-color: rgb(51, 51, 51); color: rgb(255,255,255); }");
-        self.highlighter = Highlighter(self.plainTextEdit_script.document())
 
         self.pushButton_script_run.clicked.connect(self.execute_script_clicked)
 
