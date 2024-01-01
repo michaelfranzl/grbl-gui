@@ -83,7 +83,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.logoutput_current_index = -1
         self.logbuffer = collections.deque(maxlen=_logbuffer_size)
 
-        for i in range(1, _logbuffer_size):
+        for _ in range(1, _logbuffer_size):
             self.logbuffer.append("")
 
         self.label_loginput = QLabel()
@@ -284,7 +284,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for row in range(0, 32):
             self.tableWidget_settings.setRowHeight(row, 15)
 
-        with open("examples/scripts/blank.py", 'r') as f: c = f.read()
+        with open("examples/scripts/blank.py", 'r') as f:
+            c = f.read()
         self.plainTextEdit_script.setPlainText(c)
 
         # JOG WIDGET SETUP BEGIN -------------
@@ -298,17 +299,21 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.settings = QSettings("grbl-gui.ini", QSettings.IniFormat)
 
         self._open_script_location = self.settings.value("open_script_location")
-        if self._open_script_location == None:
+        if self._open_script_location is None:
             self._open_script_location = os.getcwd() + "/examples/scripts"
-            self.settings.setValue("open_script_location", self._open_script_location)
+            self.settings.setValue(
+                    "open_script_location",
+                    self._open_script_location)
 
         self._open_gcode_location = self.settings.value("open_gcode_location")
-        if self._open_gcode_location == None:
+        if self._open_gcode_location is None:
             self._open_gcode_location = os.getcwd() + "/examples/gcode"
-            self.settings.setValue("open_gcode_location", self._open_gcode_location)
+            self.settings.setValue(
+                    "open_gcode_location",
+                    self._open_gcode_location)
 
         last_cs = self.settings.value("last_cs")
-        if last_cs == None:
+        if last_cs is None:
             last_cs = 1
             self.settings.setValue("last_cs", last_cs)
         self._last_cs = int(last_cs)
@@ -381,9 +386,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         probepoint_origin = (xy[0], xy[1], z)
         probepoint_origin = np.add(probepoint_origin, current_cs_offset)
-        self.sim_dialog.simulator_widget.item_create("Star", "probepoint_{}".format(len(self.probe_values)), "simple3d", probepoint_origin, 1, 4, (0.6, 0.6, 0.6, 1))
-
-
+        self.sim_dialog.simulator_widget.item_create(
+                "Star",
+                "probepoint_{}".format(len(self.probe_values)),
+                "simple3d",
+                probepoint_origin,
+                1,
+                4,
+                (0.6, 0.6, 0.6, 1))
 
     def probe_load(self):
         with open("probedata.txt", 'r') as f:
@@ -408,11 +418,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.probe_points.append([x, y])
             self.probe_values.append(z)
             self.probe_points_count += 1
-            if (x > max_x): max_x = x
-            if (x < min_x): min_x = x
-            if (y > max_y): max_y = y
-            if (y < min_y): min_y = y
-            if (i == 0): self.probe_z_first = z
+            if (x > max_x):
+                max_x = x
+            if (x < min_x):
+                min_x = x
+            if (y > max_y):
+                max_y = y
+            if (y < min_y):
+                min_y = y
+            if (i == 0):
+                self.probe_z_first = z
 
             self.draw_probepoint(self.probe_points[-1], self.probe_values[-1])
             i += 1
@@ -434,7 +449,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def probe_done(self):
         with open("probedata.txt", 'w') as f:
             for i in range(0, len(self.probe_points)):
-                f.write("{:8.03f} {:8.03f} {:8.03f}\n".format(self.probe_points[i][0], self.probe_points[i][1], self.probe_values[i]))
+                f.write("{:8.03f} {:8.03f} {:8.03f}\n".format(
+                    self.probe_points[i][0],
+                    self.probe_points[i][1],
+                    self.probe_values[i]))
 
         self.probe_points_count = None
 
@@ -472,16 +490,19 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         which can be used to offset Gcode.
 
         @param dimx
-        Width of area to be probed, as measured into the X+ direction from the current pos
+        Width of area to be probed,
+        as measured into the X+ direction from the current pos
 
         @param dimy
-        Height of area to be probed, as measured into the Y+ direction from the current pos
+        Height of area to be probed,
+        as measured into the Y+ direction from the current pos
 
         @param z_feed
         The probe feed towards the workpiece.
 
         @param z_expected_deviation
-        Approximate difference in mm between the lowest Z and highest Z of the warped workpiece surface
+        Approximate difference in mm between the lowest Z and highest Z
+        of the warped workpiece surface
         """
 
         if round(self.wpos[0]) != 0 or round(self.wpos[1]) != 0:
@@ -500,7 +521,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.probe_z_expected_deviation = z_expected_deviation
         self.probe_feed = z_feed
 
-        self.probe_points_planned = [ # all corners of area are pre-planned
+        self.probe_points_planned = [  # all corners of area are pre-planned
             (0, 0),
             (dimx, 0),
             (dimx, dimy),
@@ -509,7 +530,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self.probe_z_at_probestart = self.wpos[2]
 
-        self.grbl.send_immediately("G90") # absolute mode
+        self.grbl.send_immediately("G90")  # absolute mode
 
         self.do_probe_point(self.probe_points_planned[0])
 
@@ -544,7 +565,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         3-tuple of machine coordinates
         """
 
-        if self.probe_points_count == None:
+        if self.probe_points_count is None:
             # set to None by self.probe_done(). Stop the infinite probing cycle.
             return
 
@@ -577,7 +598,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def draw_heightmap(self):
         current_cs_offset = self.state_hash[self.cs_names[self.current_cs]]
 
-        if len(self.probe_values) < 4: return # at least 4 for suitable interpol
+        if len(self.probe_values) < 4:
+            return  # at least 4, for suitable interpolation
 
         # I put this here to not make it a hard requirement
         # it is difficult to install on Windows
@@ -604,8 +626,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                   )
 
         print("DRAWING HEIGHTMAP", origin, self.probe_points, self.probe_values)
-        self.sim_dialog.simulator_widget.draw_heightmap(self.heightmap_gldata, self.heightmap_dim, origin)
-
+        self.sim_dialog.simulator_widget.draw_heightmap(
+                self.heightmap_gldata,
+                self.heightmap_dim,
+                origin)
 
     # CALLBACKS
 
@@ -686,14 +710,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         elif event == "on_log":
             colors = {
-                0: "black", # notset
-                10: "#999999", # debug
-                20: "#555555", # info
-                30: "orange", # warning
-                40: "red", # error
-                50: "red", # critical
+                0: "black",  # notset
+                10: "#999999",  # debug
+                20: "#555555",  # info
+                30: "orange",  # warning
+                40: "red",  # error
+                50: "red",  # critical
                 }
-            lr = data[0] # LogRecord instance
+            lr = data[0]  # LogRecord instance
             message = lr.msg % lr.args
             level = lr.levelno
             levelname = lr.levelname
@@ -711,15 +735,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self._add_to_loginput("✎ " + message, color)
 
         elif event == "on_bufsize_change":
-            #what = data[0]
+            # what = data[0]
             msg = "{:d} Lines".format(data[0])
 
             self._current_grbl_buffer_size = int(data[0])
             self.label_bufsize.setText(msg)
 
-            #enabled = self._current_grbl_buffer_size == 0
-            #self.lineEdit_cmdline.setEnabled(enabled)
-            #self.listWidget_logoutput.setEnabled(enabled)
+            # enabled = self._current_grbl_buffer_size == 0
+            # self.lineEdit_cmdline.setEnabled(enabled)
+            # self.listWidget_logoutput.setEnabled(enabled)
 
         elif event == "on_rx_buffer_percent":
             self._rx_buffer_fill = data[0]
@@ -729,7 +753,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         elif event == "on_feed_change":
             feed = data[0]
-            if feed == None:
+            if feed is None:
                 self.lcdNumber_feed_current.display("---")
             else:
                 self.lcdNumber_feed_current.display("{:d}".format(int(feed)))
@@ -799,7 +823,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self._startup_disable_inputs()
 
         elif event == "on_settings_downloaded":
-            settings = data[0] #self.grbl.get_settings()
+            settings = data[0]  # self.grbl.get_settings()
             self.dict_into_settings_table(settings)
             self.state_stage_dirty = True
 
@@ -823,14 +847,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         elif event == "on_line_sent":
             line_number = data[0]
-            line_str = data[1]
+            # line_str = data[1]
             self.sim_dialog.simulator_widget.highlight_gcode_line(line_number)
             self._put_buffer_marker_at_line_nr = line_number
 
         elif event == "on_standstill":
             self.log("Machine is standing still")
-            if (self.grbl.gps[7] == "3" and
-            self.grbl.preprocessor.current_spindle_speed > 1):
+            if (
+                    self.grbl.gps[7] == "3" and  # spindle state
+                    self.grbl.preprocessor.current_spindle_speed > 1
+               ):
                 self.log("Laser Watchdog: Machine standstill but laser on. Turning off...", "red")
                 self.grbl.abort()
 
@@ -854,45 +880,41 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         pos = self.sim_dialog.simulator_widget.get_buffer_marker_pos()
         self._add_to_logoutput("G1 G53 X{:0.3f} Y{:0.3f} Z{:0.3f}".format(pos[0], pos[1], pos[2]))
 
-
     def on_second_tick(self):
-        if self.grbl.job_finished == False:
+        if not self.grbl.job_finished:
             self.label_runningtime.setText(self._secs_to_timestring(time.time() - self.job_run_timestamp))
             self.label_eta.setText(self._secs_to_timestring(self.job_current_eta - time.time()))
         else:
             self.label_runningtime.setText("---")
             self.label_eta.setText("---")
 
-
     def on_timer(self):
         self.label_current_line_number.setText(str(self._current_grbl_line_number))
 
-        if self._put_buffer_marker_at_line_nr != None:
+        if self._put_buffer_marker_at_line_nr is not None:
             self.sim_dialog.simulator_widget.put_buffer_marker_at_line(self._put_buffer_marker_at_line_nr)
             self._put_buffer_marker_at_line_nr = None
 
-        if self.state_hash_dirty == True:
+        if self.state_hash_dirty:
             # used to draw/update origins of coordinate systems (after $# command)
             for key, tpl in self.state_hash.items():
                 if re.match("G5[4-9].*", key):
                     self.sim_dialog.simulator_widget.draw_coordinate_system(key, tpl)
             self.state_hash_dirty = False
 
-        if self.state_stage_dirty == True:
+        if self.state_stage_dirty:
             # used to draw/update the workarea (stage) (after $$ command)
             workarea_x = int(float(self.grbl.settings[130]["val"]))
             workarea_y = int(float(self.grbl.settings[131]["val"]))
             self.sim_dialog.simulator_widget.draw_stage(workarea_x, workarea_y)
             self.state_stage_dirty = False
 
-
-        if self.state_heightmap_dirty == True:
+        if self.state_heightmap_dirty:
             self.draw_probepoint(self.probe_points[-1], self.probe_values[-1])
             self.draw_heightmap()
             self.state_heightmap_dirty = False
 
-
-        if self.state_cs_dirty == True:
+        if self.state_cs_dirty:
             # used to highlight coordinate systems (after $G command)
             for idx, val in self.cs_names.items():
                 do_highlight = val == self.cs_names[self.current_cs]
@@ -933,7 +955,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 color = "white"
                 self.jogWidget.onIdle()
 
-                if self.probe_points_count == None and self.grbl.streaming_complete == True:
+                if self.probe_points_count is None and self.grbl.streaming_complete:
                     # we are currently not probing, or dwell command is active
                     print("on idle: requesting hash ")
                     self.grbl.hash_state_requested = True
@@ -966,7 +988,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
             self.changed_state = False
 
-        if self.changed_loginput == True:
+        if self.changed_loginput:
             self._render_logbuffer()
             self.changed_loginput = False
 
@@ -1038,7 +1060,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def settings_save_into_file(self):
         filename_tuple = QFileDialog.getSaveFileName(self, "Save File", os.getcwd(), "")
         filepath = filename_tuple[0]
-        if filepath == "": return
+        if filepath == "":
+            return
 
         settings_string = self.settings_table_to_str()
         with open(filepath, 'w') as f:
@@ -1052,14 +1075,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         settings = {}
         with open(filepath, 'r') as f:
             for line in f:
-                m = re.match("\$(.*)=(.*) \((.*)\)", line)
+                m = re.match(r'\$(.*)=(.*) \((.*)\)', line)
                 if m:
                     key = int(m.group(1))
                     val = m.group(2)
                     comment = m.group(3)
                     settings[key] = {
-                        "val" : val,
-                        "cmt" : comment
+                        'val': val,
+                        'cmt': comment
                         }
         self.dict_into_settings_table(settings)
 
@@ -1123,7 +1146,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def _pick_file(self):
         filename_tuple = QFileDialog.getOpenFileName(self, "Open File",self._open_gcode_location, "GCode Files (*.ngc *.gcode *.nc)")
         fpath = filename_tuple[0]
-        if fpath == "": return
+        if fpath == "":
+            return
         self.grbl.load_file(fpath)
         self._open_gcode_location = os.path.dirname(fpath)
         self.settings.setValue("open_gcode_location", self._open_gcode_location)
@@ -1132,7 +1156,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         filename_tuple = QFileDialog.getOpenFileName(self, "Open Script", self._open_script_location, "Python3 Files (*.py)")
 
         fpath = filename_tuple[0]
-        if fpath == "": return
+        if fpath == "":
+            return
         with open(fpath, 'r') as content_file: content = content_file.read()
         self.plainTextEdit_script.setPlainText(content)
         self.label_script_filename.setText(os.path.basename(fpath))
@@ -1141,10 +1166,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self._open_script_location = os.path.dirname(fpath)
         self.settings.setValue("open_script_location", self._open_script_location)
 
-
     def _save_script(self):
         fname = self.current_script_filepath
-        if fname == None:
+        if fname is None:
             self._save_script_as()
             return
 
@@ -1198,7 +1222,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.grbl.send_immediately("G90")
 
     def _feedoverride_value_changed(self):
-        val = self.horizontalSlider_feed_override.value() # 0..100
+        val = self.horizontalSlider_feed_override.value()  # 0..100
         val = int(math.exp((val+100)/23)-50) # nice exponential growth between 20 and 6000
         self.lcdNumber_feed_override.display(val)
         self.grbl.request_feed(val)
@@ -1206,7 +1230,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.grbl.send_immediately("F{:d}".format(val))
 
     def _spindle_factor_value_changed(self):
-        val = self.horizontalSlider_spindle_factor.value() # 0..100
+        val = self.horizontalSlider_spindle_factor.value()  # 0..100
         self.grbl.preprocessor.spindle_factor = val / 100
 
     def _feedoverride_changed(self, val):
@@ -1295,7 +1319,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.plainTextEdit_job.setPlainText(output)
 
     def _secs_to_timestring(self, secs):
-        if secs < 0: return ""
+        if secs < 0:
+            return ""
         secs = int(secs)
         hours = math.floor(secs / 3600)
         secs = secs - hours * 3600
@@ -1341,7 +1366,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for row in range(0, row_count):
             cell_a = self.tableWidget_variables.item(row, 0)
 
-            if cell_a == None:
+            if cell_a is None:
                 continue
 
             key = cell_a.text().strip()
@@ -1422,10 +1447,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         A convenience function update the UI for CS
         """
         self.current_cs = nr
-        current_cs_text = self.cs_names[self.current_cs]
-        #self.label_current_cs.setText(current_cs_text)
+        # current_cs_text = self.cs_names[self.current_cs]
+        # self.label_current_cs.setText(current_cs_text)
         self.comboBox_coordinate_systems.setCurrentIndex(nr - 1)
-
         self.state_cs_dirty = True
 
     def calc_eta(self):
@@ -1444,7 +1468,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             proc.override_feed()
             cf = proc.current_feed
             cmm = proc.current_motion_mode
-            if cmm == None:
+            if cmm is None:
                 continue
             elif cmm == 0:
                 cf = g0_feed
@@ -1478,7 +1502,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
     def _add_to_loginput(self, msg, color="black"):
         html = "<span style='color: {}'>{}</span>".format(color, msg)
-        #print(html)
         self.logbuffer.append(html)
         self.changed_loginput = True
 
