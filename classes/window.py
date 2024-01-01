@@ -173,7 +173,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.grbl = GrblStreamer(self.on_grbl_event)
         self.grbl.setup_logging()
         self.grbl.poll_interval = 0.15
-        #self.grbl.cnect()
 
         # SIGNALS AND SLOTS BEGIN-------
         self.comboBox_target.currentIndexChanged.connect(self._target_selected)
@@ -1042,14 +1041,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if filepath == "":
             return
 
-        settings_string = self.settings_table_to_str()
+        settings_list = self.settings_table_to_list()
         with open(filepath, 'w') as f:
-            f.write(settings_string)
+            f.write("\n".join(settings_list))
 
     def settings_load_from_file(self):
+        print('aaa')
         filename_tuple = QFileDialog.getOpenFileName(self, "Open File", os.getcwd(), "")
         filepath = filename_tuple[0]
-        if filepath == "": return
+        if filepath == "":
+            return
 
         settings = {}
         with open(filepath, 'r') as f:
@@ -1411,7 +1412,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             # "self." is prepended for convenience
             kls = "self"
             cmd = cmd[1:]
-            cmd = "%s.%s" % (kls,cmd)
+            cmd = "%s.%s" % (kls, cmd)
             try:
                 exec(cmd)
             except:
