@@ -15,61 +15,51 @@
 # were ported directly from Grbl's C source code, so an exact match
 # should not be surprising.
 
-grbl = self.grbl
-
-
 # ===== THE SOURCE GCODE PROGRAM ======
 
 # --- this first part will use Absolute distance mode
-input = []
-input.append("G90")  # use absolute distances
+self.grbl.preprocessor.do_fractionize_lines = False
+self.grbl.preprocessor.do_fractionize_arcs = False
 
-input.append("F2000")  # set feed
-input.append("G0 X0 Y0")  # return to origin
-input.append("G1 X20 Y20 F100")  # draw a line
+self.grbl.write("G90")  # use absolute distances
 
-input.append("G17")  # select arcs in XY plane
-input.append("G2 X30 Y30 I5 J5 F200")  # draw clockwise circle in Offset mode
+self.grbl.write("F2000")  # set feed
+self.grbl.write("G0 X0 Y0")  # return to origin
+self.grbl.write("G1 X20 Y20 F100")  # draw a line
 
-input.append("G18")  # select arcs in XZ plane
-input.append("G2 X30 Z30 I15 K15")  # draw clockwise circle in Offset mode
+self.grbl.write("G17")  # select arcs in XY plane
+self.grbl.write("G2 X30 Y30 I5 J5 F200")  # draw clockwise circle in Offset mode
 
-input.append("G0 Y40")  # draw line
+self.grbl.write("G18")  # select arcs in XZ plane
+self.grbl.write("G2 X30 Z30 I15 K15")  # draw clockwise circle in Offset mode
 
-input.append("G19")  # select arcs in YZ plane
-input.append("G2 Y40 Z30 J15 K15")  # draw clockwise circle in Offset mode
+self.grbl.write("G0 Y40")  # draw line
 
-input.append("G1 X0")  # draw line
+self.grbl.write("G19")  # select arcs in YZ plane
+self.grbl.write("G2 Y40 Z30 J15 K15")  # draw clockwise circle in Offset mode
 
-input.append("G17")  # select arcs in XY plane
+self.grbl.write("G1 X0")  # draw line
+
+self.grbl.write("G17")  # select arcs in XY plane
 # draw counterclockwise helical movement down
-input.append("G3 X0 Y40 Z0 I5 J5")
+self.grbl.write("G3 X0 Y40 Z0 I5 J5")
 
-input.append("G1 X-30")  # draw line
+self.grbl.write("G1 X-30")  # draw line
 
-input.append("G3 X-40Y50 R-8")  # draw circle in Radius mode, larger than 180°
-input.append("G3 X-50Y60 R20")  # draw circle in Radius mode, smaller than 180°
+self.grbl.write("G3 X-40Y50 R-8")  # draw circle in Radius mode, larger than 180°
+self.grbl.write("G3 X-50Y60 R20")  # draw circle in Radius mode, smaller than 180°
 
 
 # ---- this second part will use relative distances -----
-input.append("F1000")
-input.append("G0 X0 Y0")  # return to origin
-input.append("G91")  # select relative distance mode
-input.append("G1 X-50 Y-20")  # draw relative line
-input.append("G1 X-5 Y-5")  # draw another relative line
-input.append("G2 X10 Y10 I5 J5")  # draw clockwise circle in Offset mode
-input.append("G2 X10 Y10 I5 J5")  # same
-input.append("G3 X10 Y10 I5 J5")  # same but counter clockwise
-input.append("G3 X-50 Y-10 R90")  # Radius mode, less than 180 deg.
-input.append("G3 X-10 Y-10 R-10")  # Radius mode, more than 180 deg.
+self.grbl.write("F1000")
+self.grbl.write("G0 X0 Y0")  # return to origin
+self.grbl.write("G91")  # select relative distance mode
+self.grbl.write("G1 X-50 Y-20")  # draw relative line
+self.grbl.write("G1 X-5 Y-5")  # draw another relative line
+self.grbl.write("G2 X10 Y10 I5 J5")  # draw clockwise circle in Offset mode
+self.grbl.write("G2 X10 Y10 I5 J5")  # same
+self.grbl.write("G3 X10 Y10 I5 J5")  # same but counter clockwise
+self.grbl.write("G3 X-50 Y-10 R90")  # Radius mode, less than 180 deg.
+self.grbl.write("G3 X-10 Y-10 R-10")  # Radius mode, more than 180 deg.
 
-input.append("G90")  # reset to absolute distance mode
-
-
-# fractionize above G-Codes and render the line segments in the simulator
-self.set_target("simulator")
-grbl.job_new()
-grbl.preprocessor.do_fractionize_lines = False
-grbl.preprocessor.do_fractionize_arcs = False
-grbl.write(input)
-grbl.job_run()
+self.grbl.write("G90")  # reset to absolute distance mode
