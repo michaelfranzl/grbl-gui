@@ -45,6 +45,9 @@ from lib import gcodetools
 from lib import utility
 from lib import pixel2laser
 
+from scipy.interpolate import griddata
+
+
 
 class MainWindow(QMainWindow, Ui_MainWindow):
     def __init__(self, path, baud):
@@ -593,10 +596,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         if len(self.probe_values) < 4:
             return  # at least 4, for suitable interpolation
-
-        # I put this here to not make it a hard requirement
-        # it is difficult to install on Windows
-        from scipy.interpolate import griddata
 
         # see http://docs.scipy.org/doc/scipy/reference/generated/scipy.interpolate.griddata.html
         interpolated_z = griddata(
