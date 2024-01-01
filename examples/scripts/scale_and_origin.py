@@ -12,15 +12,12 @@ self.new_job()
 cat = t.read("examples/gcode/cat.ngc")
 
 grbl.write(cat)
-grbl.write(t.bbox(cat))
+grbl.write(t.bbox_draw(cat))
 
 scaled_origin_cat = t.to_origin(t.scale_factor(cat, [0.2, 0.2, 0]))
 
 grbl.write(scaled_origin_cat)
-grbl.write(t.bbox(scaled_origin_cat))
-
-self.sim_dialog.simulator_widget.draw_workpiece((110, 120, 10), (350, 650, 0))
-
+grbl.write(t.bbox_draw(scaled_origin_cat))
 
 grbl.preprocessor.vars = {"1": 0}
 self.set_target("simulator")

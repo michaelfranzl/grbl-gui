@@ -249,31 +249,3 @@ class SimulatorWidget(PainterWidget):
             tr.upload()
 
         self.dirty = True
-
-    def draw_workpiece(self, dim=(100, 100, 10), offset=(0, 0, 0)):
-        off = np.add((-800, -1400, dim[2]), offset)
-        col = (0.7, 0.2, 0.1, 0.6)
-        wp1 = self.item_create(
-                "OrthoLineGrid",
-                "workpiece_top",
-                "simple3d",
-                (0, 0, 0),
-                (dim[0], dim[1], 0),
-                off,
-                2,
-                col,
-                2)
-        wp2 = self.item_create(
-                "OrthoLineGrid",
-                "workpiece_front",
-                "simple3d",
-                (0, 0, 0),
-                (dim[0], dim[2], 0),
-                off,
-                2,
-                col,
-                2)
-        wp2.rotation_angle = -90
-        wp2.rotation_vector = QVector3D(1, 0, 0)
-
-        self.dirty = True
