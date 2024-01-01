@@ -25,12 +25,8 @@ import logging
 import sys
 import time
 
-from classes.session import Session
-from classes.svg import SVG
-
 from grbl_streamer import GrblStreamer
 
-from lib import stipple
 from lib import pixel2laser as p2l
 from lib import gcodetools
 from lib import utility
@@ -54,33 +50,6 @@ def main():
 
     # Set up sub-commands like git uses them
     subparsers = parser.add_subparsers(help="Available subcommands")
-
-    # define arguments for the 'stipple' subcommand
-    stipple_parser = subparsers.add_parser(
-        "stipple",
-        help="Creates stippling art for laser-engraving based on files created by third-party C++ programs voronoi_stippler and concorde.",
-        epilog="EXAMPLE: python ./grbl_gui.py stipple ./data/grace.crd ./data/grace.sol out.svg --weight ./data/grace.wgt"
-        )
-    stipple_parser.add_argument(
-        'crd_file',
-        metavar='COORD_FILE',
-        help='File containing point coordinates in concorde format. Use modified voronoi_stippler to generate it.'
-        )
-    stipple_parser.add_argument(
-        'idx_file',
-        metavar='INDEX_FILE',
-        help='File containing TSP indices in concorde format. Use concorde to solve the TSP problem.'
-        )
-    stipple_parser.add_argument(
-        'out_file',
-        metavar='OUT_FILE',
-        help='File to write the result to. Currently only .svg output is supported. Gcode output will be supported soon.'
-        )
-    stipple_parser.add_argument(
-        '--weight',
-        metavar='WEIGHT_FILE',
-        help='File containing weights for ealogger_ch point. Use modified voronoi_stippler to generate it.'
-        )
 
     # define arguments for the 'p2l' (pixel2laser) subcommand
     p2l_parser = subparsers.add_parser(
@@ -218,11 +187,7 @@ def main():
 
     subcmd = sys.argv[1]
 
-    # after all arguments have been parsed, delegate
-    if subcmd == "stipple":
-        stipple.do(args.crd_file, args.idx_file, args.weight, args.out_file)
-
-    elif subcmd == "pixel2laser":
+    if subcmd == "pixel2laser":
         gcode = p2l.do(args.in_file)
         f = open(args.out_file, 'w')
         f.write(gcode)
