@@ -111,6 +111,7 @@ class SimulatorWidget(PainterWidget):
             opts)
 
     def draw_stage(self, workarea_x, workarea_y):
+        self.makeCurrent()
         self.item_create("CoordSystem", "csm", "simple3d", (0, 0, 0), 120, 5)
 
         self.item_remove("working_area_grid")
@@ -127,6 +128,7 @@ class SimulatorWidget(PainterWidget):
         self.dirty = True
 
     def cleanup_stage(self):
+        self.makeCurrent()
         item_keys = self.programs["simple3d"].items.keys()
 
         keys_to_delete = []
@@ -141,6 +143,7 @@ class SimulatorWidget(PainterWidget):
         self.dirty = True
 
     def draw_coordinate_system(self, key, tpl_origin):
+        self.makeCurrent()
         self.cs_offsets[key] = tpl_origin
         cskey = "cs" + key
 
@@ -170,6 +173,7 @@ class SimulatorWidget(PainterWidget):
         self.dirty = True
 
     def draw_gcode(self, gcode, cmpos, ccs, do_fractionize_arcs=True):
+        self.makeCurrent()
         if "gcode" in self.programs["simple3d"].items:
             self.item_remove("gcode")
 
@@ -186,6 +190,7 @@ class SimulatorWidget(PainterWidget):
         self.dirty = True
 
     def put_buffer_marker_at_line(self, line_number):
+        self.makeCurrent()
         if "gcode" in self.programs["simple3d"].items:
             if 2 * line_number <= self.programs["simple3d"].items["gcode"].vertexcount:
                 bufferpos = self.programs["simple3d"].items["gcode"].vdata_pos_col["position"][2 * line_number]
@@ -197,9 +202,11 @@ class SimulatorWidget(PainterWidget):
             self.dirty = True
 
     def get_buffer_marker_pos(self):
+        self.makeCurrent()
         return self.programs["simple3d"].items["buffermarker"].origin
 
     def draw_tool(self, cmpos):
+        self.makeCurrent()
         if "tool" in self.programs["simple3d"].items:
             # if tool was already created, simply move it to cmpos
             self.programs["simple3d"].items["tool"].set_origin(cmpos)
