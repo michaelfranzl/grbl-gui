@@ -1,0 +1,28 @@
+F9000
+
+G0 X0 Y0 Z0
+
+; Z max speed test
+G0 Z0
+G0 Z-80
+
+; two straight lines and one diagonal
+G0 X840
+G0 Y840
+G0 X0 Y0
+
+; draw a circle in XY plane
+G0 X120 Y120
+G17
+G2 X120 Y120 I250 J250
+
+; draw a circle in XZ plane
+G18
+G2 X120 Y120 I25 K25
+
+; draw a circle in YZ plane
+G19
+G2 X120 Y120 J25 K25
+
+; helical movement
+G2 X500 Y120 J25 K25
