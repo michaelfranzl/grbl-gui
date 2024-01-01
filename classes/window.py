@@ -1067,26 +1067,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.dict_into_settings_table(settings)
 
     def settings_upload_to_grbl(self):
-        settings_string = self.settings_table_to_str()
-        was_incremental = self.checkBox_incremental.isChecked()
-
-        self._add_to_loginput("<i>Stashing current buffer</i>")
-        self.grbl.do_buffer_stash()
-        self.grbl.incremental_streaming = True
-        self.checkBox_incremental.setChecked(True)
-
-        def settings_upload_complete():
-            self.checkBox_incremental.setChecked(was_incremental)
-            self._add_to_loginput("<i>Successfully uploaded settings!</i>")
-            self.on_job_completed_callback = None
-            self._add_to_loginput("<i>Unstashing previous buffer</i>")
-            self.grbl.do_buffer_unstash()
-
-        self.on_job_completed_callback = settings_upload_complete
-        self._add_to_loginput("<i>Sending settings...</i>")
-        self.grbl.current_line_number = 0
-        self.set_target("firmware")
-        self.grbl.stream(settings_string)
+        settings_list = self.settings_table_to_list()
+        for line in settings_list:
+            self.grbl.send_immediately(line + '\n')
 
     def _start_line_changed(self, nr):
         line_number = int(nr)
@@ -1388,16 +1371,24 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.tableWidget_settings.setRowHeight(row, 20)
             row += 1
 
-    def settings_table_to_str(self):
+    def settings_table_to_list(self):
         row_count = self.tableWidget_settings.rowCount()
-        settings_string = ""
+        settings = []
         for row in range(0, row_count):
-            key = self.tableWidget_settings.item(row, 0).text()
+            col0 = self.tableWidget_settings.item(row, 0)
+            col1 = self.tableWidget_settings.item(row, 1)
+            col2 = self.tableWidget_settings.item(row, 2)
+
+            # FIXME
+            if col0 is None:
+                continue
+
+            key = col0.text()
             key = "$" + key.replace("$", "").strip()
-            val = self.tableWidget_settings.item(row, 1).text().strip()
-            cmt = self.tableWidget_settings.item(row, 2).text().strip()
-            settings_string += key + "=" + val + " (" + cmt + ")\n"
-        return settings_string
+            val = col1.text().strip()
+            cmt = col2.text().strip()
+            settings.append("{}={} ({})".format(key, val, cmt))
+        return settings
 
     def _exec_cmd(self, cmd):
         cmd = cmd.strip()
