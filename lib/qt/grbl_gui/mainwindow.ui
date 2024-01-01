@@ -449,16 +449,6 @@
           </item>
          </layout>
         </widget>
-        <widget class="QWidget" name="tab_jog">
-         <attribute name="title">
-          <string>Jogging</string>
-         </attribute>
-         <layout class="QGridLayout" name="gridLayout_10">
-          <item row="0" column="0">
-           <layout class="QGridLayout" name="gridLayout_jog_container"/>
-          </item>
-         </layout>
-        </widget>
         <widget class="QWidget" name="tab">
          <attribute name="title">
           <string>Buffer</string>

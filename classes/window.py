@@ -29,7 +29,6 @@ import re
 
 import random
 
-from classes.jogwidget import JogWidget
 from classes.commandlineedit import CommandLineEdit
 from classes.simulatordialog import SimulatorDialog
 from grbl_streamer import GrblStreamer
@@ -290,11 +289,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         with open("examples/scripts/blank.py", 'r') as f:
             c = f.read()
         self.plainTextEdit_script.setPlainText(c)
-
-        # JOG WIDGET SETUP BEGIN -------------
-        self.jogWidget = JogWidget(self, self.grbl.stream)
-        self.gridLayout_jog_container.addWidget(self.jogWidget)
-        # JOG WIDGET SETUP END -------------
 
         self.statusBar.showMessage("Ready", 3000)
 
@@ -930,10 +924,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.lcdNumber_wy.display("{:0.3f}".format(wy))
             self.lcdNumber_wz.display("{:0.3f}".format(wz))
 
-            self.jogWidget.wx_current = wx
-            self.jogWidget.wy_current = wy
-            self.jogWidget.wz_current = wz
-
             # simulator update
             self.sim_dialog.simulator_widget.draw_tool(self.mpos)
 
@@ -943,7 +933,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             if self.state == "Idle":
                 bgcolor = "green"
                 color = "white"
-                self.jogWidget.onIdle()
 
                 if self.probe_points_count is None and self.grbl.streaming_complete:
                     # we are currently not probing, or dwell command is active
