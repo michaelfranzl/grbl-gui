@@ -103,7 +103,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.label_current_gcode.setFont(font)
         # LOGGING SETUP END ------
 
-
         # STATE VARIABLES BEGIN -----
         self.changed_state = False
         self._current_grbl_line_number = 0
@@ -112,10 +111,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self._progress_percent = 0
         self._progress_percent_last = 0
         # STATE VARIABLES END -----
-
-
-
-
 
         # MENU BAR SETUP BEGIN ----------
         self.menuBar = QMenuBar(self)
@@ -170,18 +165,15 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.comboBox_coordinate_systems.activated.connect(self._cs_selected)
         # CS SETUP END ---------
 
-
         refresh_rate = 20
         self.sim_dialog = SimulatorDialog(self, refresh_rate)
         self.sim_dialog.show()
-
 
         # GRBL SETUP BEGIN -----
         self.grbl = GrblStreamer(self.on_grbl_event)
         self.grbl.setup_logging()
         self.grbl.poll_interval = 0.15
         #self.grbl.cnect()
-
 
         # SIGNALS AND SLOTS BEGIN-------
         self.comboBox_target.currentIndexChanged.connect(self._target_selected)
@@ -225,9 +217,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.tableWidget_variables.cellChanged.connect(self._variables_edited)
         # SIGNALS AND SLOTS END-------
 
-
         self._startup_disable_inputs()
-
 
         # TIMER SETUP BEGIN ----------
         self.timer = QTimer()
@@ -238,7 +228,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.timer_second.timeout.connect(self.on_second_tick)
         self.timer_second.start(1000)
         # TIMER SETUP END ----------
-
 
         # Keyboard shortcuts BEGIN ----------
         self._shortcut = QShortcut(QKeySequence(Qt.CTRL + Qt.Key_S), self)
@@ -260,11 +249,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self._shortcut.activated.connect(self.execute_script_clicked)
         # Keyboard shortcuts END ----------
 
-
-
-
-
-
         # initialize vars needed for heightmap/surface probing
         self.heightmap_gldata = None
         self.heightmap_dim = None
@@ -279,7 +263,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.probe_values = None
         self.probe_points_count = None
 
-
         self._add_to_logoutput("=calc_eta()")
         self._add_to_logoutput("=bbox()")
         self._add_to_logoutput("=remove_tracer()")
@@ -291,8 +274,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self._add_to_logoutput("G0 X0 Y0")
 
         self.on_job_completed_callback = None
-
-
 
         self.targets = ["firmware", "simulator", "file"]
         self.comboBox_target.insertItem(0, self.targets[0])
@@ -314,7 +295,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # JOG WIDGET SETUP END -------------
 
         self.statusBar.showMessage("Ready", 3000)
-
 
         # SETTINGS SETUP BEGIN ---------------------
         self.settings = QSettings("grbl-gui.ini", QSettings.IniFormat)
@@ -341,7 +321,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.job_current_eta = 0
 
         self.current_script_filepath = None
-
 
     def closeEvent(self, event):
         """
@@ -381,7 +360,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_killalarm.setText("⚐ Kill Alarm")
         self.pushButton_job_new.setText("✧ New")
         self.pushButton_job_halt.setText("⌛ Pause")
-
 
     def setupScripting(self):
         print("Setting up Scripting Tab")
@@ -453,11 +431,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self._init_heightmap(max_x, max_y)
 
-
-
         self.state_heightmap_dirty = True
-
-
 
     def probe_done(self):
         with open("probedata.txt", 'w') as f:
@@ -467,7 +441,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.probe_points_count = None
 
         self.log("<b>Probe data available in<br>self.probe_points and self.probe_values<br>and in probedata.txt.</b>", "orange")
-
 
     def _init_heightmap(self, dimx, dimy):
         self.sim_dialog.simulator_widget.remove_heightmap()
@@ -491,7 +464,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         grid = np.mgrid[start_x:end_x:steps_x, start_y:end_y:steps_y]
         self.heightmap_ipolgrid = (grid[0], grid[1]) # format required by interpolation
-
 
     def probe_start(self, dimx, dimy, z_feed=50, z_expected_deviation=10):
         """
@@ -542,7 +514,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.grbl.send_immediately("G90") # absolute mode
 
         self.do_probe_point(self.probe_points_planned[0])
-
 
     def do_probe_point(self, pos):
         """
@@ -605,7 +576,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.state_heightmap_dirty = True
         self.do_probe_point(nextpoint)
 
-
     def draw_heightmap(self):
         current_cs_offset = self.state_hash[self.cs_names[self.current_cs]]
 
@@ -659,8 +629,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             pos = data[0]
             self.log("Probe: <b>{}</b>".format(pos[2]))
             self.handle_probe_point(pos)
-
-
 
         elif event == "on_gcode_parser_stateupdate":
             gps = data[0]
@@ -742,8 +710,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             else:
                 txt = message
 
-
-
             self._add_to_loginput("✎ " + message, color)
 
         elif event == "on_bufsize_change":
@@ -818,10 +784,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.spinBox_start_line.setValue(0)
             self._start_line_changed(0)
 
-
-
-
-
         elif event == "on_disconnected":
             self.action_grbl_disconnect.setEnabled(False)
             self.action_grbl_connect.setEnabled(True)
@@ -878,7 +840,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 # restore previous CS
                 self.comboBox_coordinate_systems.setCurrentIndex(self._last_cs - 1)
                 self._cs_selected(self._last_cs - 1)
-
 
         elif event == "on_movement":
             pass
@@ -941,7 +902,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                 cs_item.highlight(do_highlight)
 
             #self.sim_dialog.simulator_widget.cleanup_stage()
-
             self.sim_dialog.simulator_widget.dirty = True
             self.state_cs_dirty = False
 
@@ -1016,11 +976,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.progressBar_buffer.setValue(self._rx_buffer_fill)
             self._rx_buffer_fill_last = self._rx_buffer_fill
 
-
         if self._progress_percent_last != self._progress_percent:
             self.progressBar_job.setValue(self._progress_percent)
             self._progress_percent_last = self._progress_percent
-
 
     def _startup_disable_inputs(self):
         self.comboBox_target.setEnabled(False)
@@ -1077,7 +1035,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.listWidget_logoutput.setCurrentItem(item)
             self.lineEdit_cmdline.setText(item.text())
 
-
     # UI SLOTS
 
     def settings_save_into_file(self):
@@ -1088,7 +1045,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         settings_string = self.settings_table_to_str()
         with open(filepath, 'w') as f:
             f.write(settings_string)
-
 
     def settings_load_from_file(self):
         filename_tuple = QFileDialog.getOpenFileName(self, "Open File", os.getcwd(), "")
@@ -1107,11 +1063,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
                         "val" : val,
                         "cmt" : comment
                         }
-
         self.dict_into_settings_table(settings)
-
-
-
 
     def settings_upload_to_grbl(self):
         settings_string = self.settings_table_to_str()
@@ -1134,7 +1086,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.grbl.current_line_number = 0
         self.set_target("firmware")
         self.grbl.stream(settings_string)
-
 
     def _start_line_changed(self, nr):
         line_number = int(nr)
@@ -1159,21 +1110,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def _on_logoutput_item_double_clicked(self, item):
         self._exec_cmd(item.text())
 
-
     def _on_logoutput_item_clicked(self, item):
         self.lineEdit_cmdline.setText(item.text())
         self.lineEdit_cmdline.setFocus()
-
 
     def _on_logoutput_current_item_changed(self, item_current, item_previous):
         self.lineEdit_cmdline.setText(item_current.text())
         self.logoutput_at_end = False
 
-
     def _quit(self):
         self.grbl.disconnect()
         QApplication.quit()
-
 
     def _pick_file(self):
         filename_tuple = QFileDialog.getOpenFileName(self, "Open File",self._open_gcode_location, "GCode Files (*.ngc *.gcode *.nc)")
@@ -1207,7 +1154,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             content_file.write(self.plainTextEdit_script.toPlainText())
         self._add_to_loginput("File {} written.".format(fname))
 
-
     def _save_script_as(self):
         filename_tuple = QFileDialog.getSaveFileName(self, "Save Script", self._open_script_location)
         fname = filename_tuple[0]
@@ -1217,14 +1163,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self._add_to_loginput("File {} written.".format(fname))
         self.label_script_filename.setText(os.path.basename(fpath))
 
-
-
     def xminus(self):
         step = - self.doubleSpinBox_jogstep.value()
         self.grbl.send_immediately("G91")
         self.grbl.send_immediately("G0 X" + str(step))
         self.grbl.send_immediately("G90")
-
 
     def xplus(self):
         step = self.doubleSpinBox_jogstep.value()
@@ -1232,13 +1175,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.grbl.send_immediately("G0 X" + str(step))
         self.grbl.send_immediately("G90")
 
-
     def yminus(self):
         step = - self.doubleSpinBox_jogstep.value()
         self.grbl.send_immediately("G91")
         self.grbl.send_immediately("G0 Y" + str(step))
         self.grbl.send_immediately("G90")
-
 
     def yplus(self):
         step = self.doubleSpinBox_jogstep.value()
@@ -1246,20 +1187,17 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.grbl.send_immediately("G0 Y" + str(step))
         self.grbl.send_immediately("G90")
 
-
     def zminus(self):
         step = - self.doubleSpinBox_jogstep.value()
         self.grbl.send_immediately("G91")
         self.grbl.send_immediately("G0 Z" + str(step))
         self.grbl.send_immediately("G90")
 
-
     def zplus(self):
         step = self.doubleSpinBox_jogstep.value()
         self.grbl.send_immediately("G91")
         self.grbl.send_immediately("G0 Z" + str(step))
         self.grbl.send_immediately("G90")
-
 
     def _feedoverride_value_changed(self):
         val = self.horizontalSlider_feed_override.value() # 0..100
@@ -1280,30 +1218,24 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # next set the boolean flag
         self.grbl.set_feed_override(val)
 
-
     def _incremental_changed(self, val):
         val = False if val == 0 else True
         self.grbl.incremental_streaming = val
 
-
     def abort(self):
         self.reset()
 
-
     def hold(self):
         self.grbl.hold()
-
 
     def reset(self):
         self.probe_points_count = None
         self.grbl.abort()
 
-
     def job_run(self):
         self.job_run_timestamp = time.time()
         line_nr = self.spinBox_start_line.value()
         self.grbl.job_run(line_nr)
-
 
     def job_halt(self):
         self.grbl.job_halt()
@@ -1312,17 +1244,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
     def stream_play(self):
         self.grbl.job_run()
 
-
     def check(self):
         self.grbl.send_immediately("$C")
-
 
     def g0x0y0(self):
         motion_mode = self.grbl.gps[4] # remember previous
         self.grbl.send_immediately("G90") # absolute mode
         self.grbl.send_immediately("G0 X0 Y0")
         self.grbl.send_immediately("G" + motion_mode) # restore
-
 
     def g53z0(self):
         # one millimeter below the limit switch
@@ -1350,17 +1279,14 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.action_grbl_connect.setEnabled(False)
         self.grbl.cnect(self.devicepath, self.devicebaud)
 
-
     def disconnect(self):
         self.action_grbl_disconnect.setEnabled(False)
         self.grbl.disconnect()
-
 
     def draw_gcode(self, gcode, do_fractionize_arcs=True):
         ccs = self.cs_names[self.current_cs]
         self.sim_dialog.simulator_widget.cs_offsets = self.state_hash
         self.sim_dialog.simulator_widget.draw_gcode(gcode, self.mpos, ccs, do_fractionize_arcs)
-
 
     def _show_buffer(self):
         buf = self.grbl.buffer
@@ -1399,8 +1325,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.pushButton_job_run.setStyleSheet("background-color: rgb(198,31,31); color: white;")
         else:
             self.pushButton_job_run.setStyleSheet("background-color: none; color: black;")
-
-
 
     def current_cs_setzero(self):
         self.grbl.send_immediately("G10 L2 P{:d} X{:f} Y{:f} Z{:f}".format(self.current_cs, self.mpos[0], self.mpos[1], self.mpos[2]))
