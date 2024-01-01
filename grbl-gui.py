@@ -31,7 +31,7 @@ from lib import pixel2laser as p2l
 from lib import gcodetools
 from lib import utility
 
-from PyQt5.QtWidgets import QApplication
+from PyQt6.QtWidgets import QApplication
 
 from classes.window import MainWindow
 
@@ -248,7 +248,7 @@ def main():
         app = QApplication(sys.argv)
         window = MainWindow(args.path, int(args.baud))
         window.show()
-        sys.exit(app.exec_())
+        sys.exit(app.exec())
 
 
 if __name__ == "__main__":

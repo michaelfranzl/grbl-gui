@@ -18,7 +18,7 @@ You should have received a copy of the GNU General Public License
 along with pyglpainter. If not, see <https://www.gnu.org/licenses/>.
 """
 
-from PyQt5.QtWidgets import QWidget, QGridLayout
+from PyQt6.QtWidgets import QWidget, QGridLayout
 
 from .simulatorwidget import SimulatorWidget
 

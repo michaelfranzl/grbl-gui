@@ -4,7 +4,7 @@ Graphical User Interface for the "grbl" CNC controller.
 
 Python scripting and realtime OpenGL 3D visualization of gcode plus
 streaming to the [grbl](https://github.com/grbl/grbl) CNC controller,
-implemented in Python3 with Qt5 bindings.
+implemented in Python3 with Qt6 bindings.
 
 ![The main window](screenshots/helloworldgui.jpg)
 

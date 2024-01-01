@@ -4,13 +4,13 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-pyglpainter = "*"
-gcode-machine = "*"
-grbl-streamer = "*"
+pyglpainter = "~=2.0"
+gcode-machine = "~=1.0"
+grbl-streamer = "~=2.0"
 scipy = "*"
 svgwrite = "*"
 pillow = "*"
-pyqt5 = "*"
+pyqt6 = "*"
 
 [dev-packages]
 

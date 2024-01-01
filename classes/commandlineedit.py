@@ -18,25 +18,25 @@ You should have received a copy of the GNU General Public License
 along with pyglpainter. If not, see <https://www.gnu.org/licenses/>.
 """
 
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QLineEdit
+from PyQt6.QtCore import Qt
+from PyQt6.QtWidgets import QLineEdit
 
 
 class CommandLineEdit(QLineEdit):
     def __init__(self, parent, callback):
-        super(CommandLineEdit, self).__init__(parent)
+        super().__init__(parent)
 
         self.callback = callback
         self.parent = parent
 
     def keyPressEvent(self, event):
         key = event.key()
-        if key == Qt.Key_Up:
+        if key == Qt.Key.Key_Up:
             self.callback("UP")
-        elif key == Qt.Key_Down:
+        elif key == Qt.Key.Key_Down:
             self.callback("DOWN")
-        elif key == Qt.Key_Enter:
+        elif key == Qt.Key.Key_Enter:
             self.callback("Enter")
-        elif key == Qt.Key_Return:
+        elif key == Qt.Key.Key_Return:
             self.callback("Enter")
         QLineEdit.keyPressEvent(self, event)

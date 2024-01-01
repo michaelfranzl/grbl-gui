@@ -34,12 +34,10 @@ from classes.simulatordialog import SimulatorDialog
 from grbl_streamer import GrblStreamer
 from gcode_machine import GcodeMachine
 
-from PyQt5 import QtGui
-from PyQt5.QtCore import Qt, QTimer, QSettings
-from PyQt5.QtGui import QKeySequence
-from PyQt5.QtWidgets import (
-        QApplication, QLabel, QMainWindow, QFileDialog, QListWidgetItem,
-        QMenuBar, QAction, QTableWidgetItem, QShortcut)
+from PyQt6 import QtGui
+from PyQt6.QtCore import Qt, QTimer, QSettings
+from PyQt6.QtGui import QKeySequence, QAction, QShortcut
+from PyQt6.QtWidgets import QApplication, QLabel, QMainWindow, QFileDialog, QListWidgetItem, QMenuBar, QTableWidgetItem
 
 from lib.qt.grbl_gui.ui_mainwindow import Ui_MainWindow
 from lib import gcodetools
@@ -89,10 +87,11 @@ class MainWindow(QMainWindow, Ui_MainWindow):
             self.logbuffer.append("")
 
         self.label_loginput = QLabel()
-        self.label_loginput.setTextFormat(Qt.RichText)
-        self.label_loginput.setTextInteractionFlags(Qt.TextSelectableByMouse)
+        self.label_loginput.setTextFormat(Qt.TextFormat.RichText)
+        self.label_loginput.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
         self.scrollArea_loginput.setWidget(self.label_loginput)
-        self.label_loginput.setAlignment(Qt.AlignBottom | Qt.AlignLeft)
+        self.label_loginput.setAlignment(Qt.AlignmentFlag.AlignBottom |
+                                         Qt.AlignmentFlag.AlignLeft)
         font = QtGui.QFont()
         font.setFamily("DejaVu Sans Mono")
         font.setPointSize(7)
@@ -229,22 +228,22 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         # TIMER SETUP END ----------
 
         # Keyboard shortcuts BEGIN ----------
-        self._shortcut = QShortcut(QKeySequence(Qt.CTRL + Qt.Key_S), self)
+        self._shortcut = QShortcut(QKeySequence(Qt.Modifier.CTRL | Qt.Key.Key_S), self)
         self._shortcut.activated.connect(self._save_script)
 
-        self._shortcut = QShortcut(QKeySequence(Qt.CTRL + Qt.Key_O), self)
+        self._shortcut = QShortcut(QKeySequence(Qt.Modifier.CTRL | Qt.Key.Key_O), self)
         self._shortcut.activated.connect(self._pick_script)
 
-        self._shortcut = QShortcut(QKeySequence(Qt.CTRL + Qt.Key_R), self)
+        self._shortcut = QShortcut(QKeySequence(Qt.Modifier.CTRL | Qt.Key.Key_R), self)
         self._shortcut.activated.connect(self.reset)
 
-        self._shortcut = QShortcut(QKeySequence(Qt.CTRL + Qt.Key_K), self)
+        self._shortcut = QShortcut(QKeySequence(Qt.Modifier.CTRL | Qt.Key.Key_K), self)
         self._shortcut.activated.connect(self.grbl.killalarm)
 
-        self._shortcut = QShortcut(QKeySequence(Qt.CTRL + Qt.Key_H), self)
+        self._shortcut = QShortcut(QKeySequence(Qt.Modifier.CTRL | Qt.Key.Key_H), self)
         self._shortcut.activated.connect(self.homing)
 
-        self._shortcut = QShortcut(QKeySequence(Qt.CTRL + Qt.Key_E), self)
+        self._shortcut = QShortcut(QKeySequence(Qt.Modifier.CTRL | Qt.Key.Key_E), self)
         self._shortcut.activated.connect(self.execute_script_clicked)
         # Keyboard shortcuts END ----------
 
@@ -292,7 +291,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.statusBar.showMessage("Ready", 3000)
 
         # SETTINGS SETUP BEGIN ---------------------
-        self.settings = QSettings("grbl-gui.ini", QSettings.IniFormat)
+        self.settings = QSettings("grbl-gui.ini", QSettings.Format.IniFormat)
 
         self._open_script_location = self.settings.value("open_script_location")
         if self._open_script_location is None:
