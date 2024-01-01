@@ -284,13 +284,7 @@ def main():
 
     elif subcmd == "gui":
         app = QApplication(sys.argv)
-        #styles = [line.strip() for line in open("stylesheet.css")]
-        #styles = " ".join(styles)
-        #app.setStyleSheet(styles)
         window = MainWindow(args.path, int(args.baud))
-        #ui = Ui_MainWindow()
-        #ui.setupUi(window)
-        #window = Window()
         window.show()
         sys.exit(app.exec_())
 
