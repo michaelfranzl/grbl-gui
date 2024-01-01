@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'lib/qt/gerbil_gui/mainwindow.ui'
+# Form implementation generated from reading ui file 'lib/qt/grbl_gui/mainwindow.ui'
 #
 # Created: Thu Nov 17 09:41:32 2016
 #      by: PyQt5 UI code generator 5.3.2

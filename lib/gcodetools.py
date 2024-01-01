@@ -105,7 +105,7 @@ def bbox_draw(gcode):
 
 
 def translate(lines, offsets=[0, 0, 0]):
-    logger = logging.getLogger('gerbil')
+    logger = logging.getLogger('grbl-gui')
 
     result = []
 
@@ -252,7 +252,7 @@ def bbox(gcode):
 
 def bumpify(gcode_list, cwpos, probe_points, probe_values):
     print("bumpify start")
-    logger = logging.getLogger('gerbil')
+    logger = logging.getLogger('grbl-gui')
 
     position = list(cwpos)
 

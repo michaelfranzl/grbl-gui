@@ -24,19 +24,17 @@ implemented in Python3 with Qt5 bindings.
 * Your graphics hardware and drivers need to support at least OpenGL version 2.1 with GLSL version 1.20.
 * An Arduino board with grbl version 0.9j flashed onto it (however, the Gcode simulator and scripting will even work without an Arduino board connected)
 
-## Usage
 
-Start the GUI (the path to a serial port on Windows is "COMx" where x is a number):
+## Usage
 
 ```sh
 pipenv run grbl-gui.py gui --path /dev/ttyUSB0 --baud=115200
 ```
-
 
 ## Development
 
 Update Python code from Qt .ui file
 
 ```sh
-pyuic5 -o lib/qt/gerbil_gui/ui_mainwindow.py lib/qt/gerbil_gui/mainwindow.ui
+pyuic5 -o lib/qt/grbl_gui/ui_mainwindow.py lib/qt/grbl_gui/mainwindow.ui
 ```

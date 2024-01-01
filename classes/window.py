@@ -65,7 +65,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.setupScripting()
 
         # GENERIC SETUP BEGIN -----
-        self.setWindowTitle("gerbil_gui")
+        self.setWindowTitle("grbl-gui")
         self.lcdNumber_feed_current.display("---")
         # GENERIC SETUP END -----
 

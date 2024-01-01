@@ -1,5 +1,5 @@
 # This script tests if the fractionization of arcs and lines (break
-# down into small linear segments) by gerbil's preprocessor
+# down into small linear segments) by gcode-machine's preprocessor
 # matches the actually traced path by the Grbl firmware (reality check).
 
 # Fractionization of long lines or arcs into small line segments is useful for
