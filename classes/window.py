@@ -328,12 +328,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if self._open_gcode_location == None:
             self._open_gcode_location = os.getcwd() + "/examples/gcode"
             self.settings.setValue("open_gcode_location", self._open_gcode_location)
-        
-        self._last_cs = int(self.settings.value("last_cs"))
-        if self._last_cs == None:
-            self._last_cs = 1
-            self.settings.setValue("last_cs", self._last_cs)
-        ## SETTINGS SETUP END ---------------------
+
+        last_cs = self.settings.value("last_cs")
+        if last_cs == None:
+            last_cs = 1
+            self.settings.setValue("last_cs", last_cs)
+        self._last_cs = int(last_cs)
+        # SETTINGS SETUP END ---------------------
 
         self._put_buffer_marker_at_line_nr = None
         self.job_run_timestamp = time.time()
