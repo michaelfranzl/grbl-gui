@@ -94,7 +94,6 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         font = QtGui.QFont()
         font.setFamily("DejaVu Sans Mono")
         font.setPointSize(7)
-        #self.label_loginput.setStyleSheet("font: 8pt")
         self.label_loginput.setFont(font)
 
         font = QtGui.QFont()
