@@ -246,17 +246,35 @@ def main():
 
     elif subcmd == "translate":
         lines = utility.read_file_to_linearray(args.infile)
-        result = gcodetools.translate(lines, [float(args.offset_x), float(args.offset_y), float(args.offset_z)])
+        result = gcodetools.translate(
+                lines,
+                [
+                    float(args.offset_x),
+                    float(args.offset_y),
+                    float(args.offset_z)
+                ])
         utility.write_file_from_linearray(result, args.outfile)
 
     elif subcmd == "scale_factor":
         lines = utility.read_file_to_linearray(args.infile)
-        result = gcodetools.scale_factor(lines, [float(args.scale_x), float(args.scale_y), float(args.scale_z)], False)
+        result = gcodetools.scale_factor(
+                lines,
+                [
+                    float(args.scale_x),
+                    float(args.scale_y),
+                    float(args.scale_z)
+                ],
+                False)
         utility.write_file_from_linearray(result, args.outfile)
 
     elif subcmd == "scale_into":
         lines = utility.read_file_to_linearray(args.infile)
-        result = gcodetools.scale_into(lines, float(args.width), float(args.height), float(args.depth), False)
+        result = gcodetools.scale_into(
+                lines,
+                float(args.width),
+                float(args.height),
+                float(args.depth),
+                False)
         utility.write_file_from_linearray(result, args.outfile)
 
     elif subcmd == "2origin":
