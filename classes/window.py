@@ -900,6 +900,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         if self.state_cs_dirty:
             # used to highlight coordinate systems (after $G command)
             for idx, val in self.cs_names.items():
+                self.sim_dialog.simulator_widget.makeCurrent()
+                current_cs_offset = self.state_hash[self.cs_names[self.current_cs]]
                 do_highlight = val == self.cs_names[self.current_cs]
                 cs_item = self.sim_dialog.simulator_widget.programs["simple3d"].items["cs" + val]
                 cs_item.highlight(do_highlight)
