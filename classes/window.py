@@ -1464,8 +1464,8 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.job_current_eta = time.time() + mins * 60
         self.label_jobtime.setText(self._secs_to_timestring(mins * 60))
 
-    def bbox(self, move_z=False):
-        lines = gcodetools.bbox_draw(self.grbl.buffer, move_z).split("\n")
+    def bbox(self):
+        lines = gcodetools.bbox_draw(self.grbl.buffer).split("\n")
         for line in lines:
             self.grbl.send_immediately(line)
 
