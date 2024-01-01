@@ -24,10 +24,10 @@ from PyQt5.QtWidgets import (QLineEdit)
 class CommandLineEdit(QLineEdit):
     def __init__(self, parent, callback):
         super(CommandLineEdit, self).__init__(parent)
-        
+
         self.callback = callback
         self.parent = parent
-       
+
     def keyPressEvent(self, event):
         key = event.key()
         if key == Qt.Key_Up:

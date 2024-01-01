@@ -8,9 +8,9 @@ def do(crd_file, idx_file, wgt_file, out_file):
     sort_indices = read_sort_indices(idx_file)
     if wgt_file:
         weights_unsorted = read_weights(wgt_file)
-        
+
     data = merge_and_sort_data(sort_indices, coords_unsorted, weights_unsorted)
-        
+
     if ".svg" in out_file:
         svg = SVG("mysvg", out_file)
         svg.draw_from_data(data, False)
@@ -34,7 +34,7 @@ def render_gcode_from_data(data, out_file):
             f.write("G0 X{:0.2f} Y{:0.2f}\n".format(x, 3000 - y)) # position
             f.write("G1 Z-{:0.2f}\n".format(r))
             f.write("G0 Z0.5 ; _zclear\n")
-    
+
 def merge_and_sort_data(sort_indices, coords_unsorted, weights_unsorted):
     logging.info("Sorting coords")
     data = []
@@ -51,7 +51,7 @@ def read_sort_indices(filename_solution):
         for line in f:
             indices = map(int, line.strip().split(" "))
             sort_indices.append(indices)
-        
+
     return [item for sublist in sort_indices for item in sublist]
 
 
@@ -62,10 +62,10 @@ def read_weights(filename_weights):
     for line in f:
         idx, w = line.strip().split(' ')
         weights.append(float(w))
-        
+
     return weights
-    
-    
+
+
 def read_coords(filename_coord):
     '''
     read the coordinates from file
@@ -73,7 +73,7 @@ def read_coords(filename_coord):
     '''
     logging.info("Reading coord file %s", filename_coord)
     f = open(filename_coord)
-    
+
     coords=[]
     state_coords = False
     for line in f:

@@ -52,12 +52,12 @@ def main():
     #logging.basicConfig(level=logging.INFO, format=log_format)
     logger = logging.getLogger('grbl_gui')
     logger.setLevel(5)
-    
+
     parser = argparse.ArgumentParser(description='This program is a box full of useful CNC tools')
-    
+
     # Set up sub-commands like git uses them
     subparsers = parser.add_subparsers(help="Available subcommands")
-    
+
     # define arguments for the 'stipple' subcommand
     stipple_parser = subparsers.add_parser(
         "stipple",
@@ -84,7 +84,7 @@ def main():
         metavar='WEIGHT_FILE',
         help='File containing weights for ealogger_ch point. Use modified voronoi_stippler to generate it.'
         )
-    
+
     # define arguments for the 'p2l' (pixel2laser) subcommand
     p2l_parser = subparsers.add_parser(
         "pixel2laser",
@@ -101,7 +101,7 @@ def main():
         metavar='OUT_FILE',
         help='File to write the result to.'
         )
-    
+
     # define arguments for the 'stream' subcommand
     stream_parser = subparsers.add_parser("stream", help="Streams a gcode file to GRBL.")
     stream_parser.add_argument(
@@ -114,7 +114,7 @@ def main():
         metavar='GCODE_FILE',
         help='File to stream'
         )
-    
+
     # define arguments for the 'bbox' subcommand
     bbox_parser = subparsers.add_parser("bbox", help="Calculates the bounding box of a gcode file")
     bbox_parser.add_argument(
@@ -122,8 +122,8 @@ def main():
         metavar='GCODE_FILE',
         help='File to find the bounding box for'
         )
-    
-    
+
+
     # This parent parser provides args for infile and outfile for less repetition
     parent_parser = argparse.ArgumentParser(add_help=False)
     parent_parser.add_argument(
@@ -136,7 +136,7 @@ def main():
         metavar='GCODE_OUTFILE',
         help='File to write results to'
         )
-    
+
     # define arguments for the 'translate' subcommand
     translate_parser = subparsers.add_parser("translate", help="Translates gcode by X, Y, Z offsets", parents=[parent_parser])
     translate_parser.add_argument(
@@ -154,8 +154,8 @@ def main():
         metavar='OFFSET_Z',
         help='offset z'
         )
-    
-    
+
+
     # define arguments for the 'scale_factor' subcommand
     scalefactor_parser = subparsers.add_parser("scale_factor", help="Scales gcode by X, Y, Z factors", parents=[parent_parser])
     scalefactor_parser.add_argument(
@@ -193,10 +193,10 @@ def main():
         help='depth in mm'
         )
 
-    
+
     # define arguments for the 'scale' subcommand
     to_origin_parser = subparsers.add_parser("2origin", help="Moves bottom left extremity of gcode to (0,0), z remains unaffected", parents=[parent_parser])
-    
+
     # define arguments for the 'gui' subcommand
     gui_parser = subparsers.add_parser("gui", help="Start GUI")
     gui_parser.add_argument(
@@ -205,7 +205,7 @@ def main():
         default='/dev/ttyACM0',
         help='e.g. /dev/ttyACM0'
         )
-    
+
     gui_parser.add_argument(
         '--baud',
         metavar='BAUD',
@@ -214,56 +214,56 @@ def main():
         )
 
     args = parser.parse_args()
-    
+
     if len(sys.argv) < 2:
         print("Please use the -h flag to see help")
         raise SystemExit
-    
+
     subcmd = sys.argv[1]
-    
+
     # after all arguments have been parsed, delegate
     if subcmd == "stipple":
         stipple.do(args.crd_file, args.idx_file, args.weight, args.out_file)
-        
+
     elif subcmd == "pixel2laser":
         gcode = p2l.do(args.in_file)
         f = open(args.out_file, 'w')
         f.write(gcode)
         f.close()
-        
+
     elif subcmd == "stream":
         grbl = Gerbil("grbl1", args.dev_node)
         grbl.cnect()
         time.sleep(1)
         src = "out.ngc"
         grbl.send(src)
-        
+
     elif subcmd == "bbox":
         lines = utility.read_file_to_linearray(args.gcodefile)
-        
+
         bbox = gcodetools.get_bbox(lines)
         print("BBOX: {}".format(bbox))
-        
+
     elif subcmd == "translate":
         lines = utility.read_file_to_linearray(args.infile)
         result = gcodetools.translate(lines, [float(args.offset_x), float(args.offset_y), float(args.offset_z)])
         utility.write_file_from_linearray(result, args.outfile)
-        
+
     elif subcmd == "scale_factor":
         lines = utility.read_file_to_linearray(args.infile)
         result = gcodetools.scale_factor(lines, [float(args.scale_x), float(args.scale_y), float(args.scale_z)], False)
         utility.write_file_from_linearray(result, args.outfile)
-        
+
     elif subcmd == "scale_into":
         lines = utility.read_file_to_linearray(args.infile)
         result = gcodetools.scale_into(lines, float(args.width), float(args.height), float(args.depth), False)
         utility.write_file_from_linearray(result, args.outfile)
-        
+
     elif subcmd == "2origin":
         lines = utility.read_file_to_linearray(args.infile)
         result = gcodetools.move_to_origin(lines)
         utility.write_file_from_linearray(result, args.outfile)
-        
+
     elif subcmd == "gui":
         app = QApplication(sys.argv)
         #styles = [line.strip() for line in open("stylesheet.css")]
@@ -275,6 +275,7 @@ def main():
         #window = Window()
         window.show()
         sys.exit(app.exec_())
+
 
 if __name__ == "__main__":
     main()

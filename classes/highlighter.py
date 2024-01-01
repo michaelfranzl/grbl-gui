@@ -24,7 +24,7 @@ class Highlighter(QtGui.QSyntaxHighlighter):
         self.highlightingRules.append((QtCore.QRegExp("\\bQ[A-Za-z]+\\b"),
                 classFormat))
 
-        
+
 
         quotationFormat = QtGui.QTextCharFormat()
         quotationFormat.setForeground( QColor(230,219,116) )
@@ -41,13 +41,13 @@ class Highlighter(QtGui.QSyntaxHighlighter):
         keywordFormat.setForeground(QColor(249,38,114))
         keywordFormat.setFontWeight(QtGui.QFont.Bold)
 
-        
+
 
         keywordPatterns = ["\\bclass\\b","\\bdef\\b","\\bsuper\\b",
         "\\bNone\\b","\\bFalse\\b","\\bTrue\\b","\\bself\\b","\\breturn\\b",
         "\\blambda\\b","\\bprint\\b","\\bformat\\b",
         "\\bif\\b","\\belse\\b","\\belif\\b","\\bwhile\\b","\\bfor\\b","\\bin\\b",]
-        
+
         for pattern in keywordPatterns:
             self.highlightingRules.append( (QtCore.QRegExp(pattern), keywordFormat) )
 
@@ -56,7 +56,7 @@ class Highlighter(QtGui.QSyntaxHighlighter):
         globalFormat.setFontWeight(QtGui.QFont.Bold)
 
         globalPatterns = ["\\State\\b","\\FileLines\\b","\\ZStack\\b","\\bSettings\\b",]
-        
+
         for pattern in globalPatterns:
             self.highlightingRules.append( (QtCore.QRegExp(pattern), globalFormat) )
 

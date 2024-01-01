@@ -39,10 +39,3 @@ grbl.write(gcode)
 # Send the result straight to the simulator window
 grbl.target = "simulator"
 grbl.job_run()
-
-
-
-
-
-
-

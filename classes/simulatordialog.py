@@ -30,6 +30,6 @@ class SimulatorDialog(QWidget, Ui_SimulatorDialog):
     def __init__(self, parent, refresh_rate=20):
         super(SimulatorDialog, self).__init__()
         self.setupUi(self)
-        
+
         self.simulator_widget = SimulatorWidget(self, refresh_rate)
         self.gridLayout_simulator.addWidget(self.simulator_widget)

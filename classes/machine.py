@@ -1,5 +1,5 @@
 '''
-    Machine Class 
+    Machine Class
 
     The purpose of this class is to handle everything there is
     to do with a machine, including how to handle opening and
@@ -15,7 +15,7 @@ class Machine:
     def __init__(self, name="", path=""):
         self.path = path
         self.name = name
-        ''' 
+        '''
             [ btype, diameter, distance, currentdistance ]
             The third element is for tracking our current distance
             from the original distance, for if we start a 5mm from
@@ -24,7 +24,7 @@ class Machine:
             etc as we please.
         '''
         self.bit = ["flat", 6, 0, 0]
-        
+
     '''
     mat: wood_hard, wood_soft which helps to decide the speed.
     w,h,d: width, height, depthe in mm
@@ -33,7 +33,7 @@ class Machine:
         if not mat and not w and not h and not d:
             return self.material
         else:
-            if mat: 
+            if mat:
                 self.material[0] = mat
             if w:
                 self.material[1] = w
@@ -41,13 +41,13 @@ class Machine:
                 self.material[2] = h
             if d:
                 self.material[3] = d
-                    
+
     def receive(self,txt):
         fd = os.open(self.path,os.O_WRONLY | os.O_CREAT)
         os.write(fd, txt + "\n")
         os.fsync(fd)
         os.close(fd)
-        
+
     '''
         Bit btypes are: flat round v20 v90 etc
         Bit size is always in mm diameter

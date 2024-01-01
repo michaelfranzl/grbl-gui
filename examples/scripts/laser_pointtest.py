@@ -43,16 +43,3 @@ self.grbl.write(gcodes)
 
 self.set_target("simulator")
 self.job_run()
-
-
-
-
-
-
-
-
-
-
-
-
-

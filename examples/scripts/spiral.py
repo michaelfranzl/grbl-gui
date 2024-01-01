@@ -41,8 +41,8 @@ def spiral(cx, cy, r1, r2, windings, direction):
         print(angle)
         gcode.append("X{:.3f} Y{:.3f} S255".format(x, y))
     return gcode
-        
-    
+
+
 self.grbl.preprocessor.do_fractionize_arcs = False
 self.grbl.preprocessor.do_fractionize_lines = False
 
@@ -53,17 +53,9 @@ for z in range(1, steps):
     gcodes.append("G0 Z{} S0".format(-thickness/steps))
     gcodes.append("G90")
     dir *= -1
-    
+
 
 self.grbl.write(gcodes)
 
 self.set_target("simulator")
 self.job_run()
-
-
-
-
-
-
-
-

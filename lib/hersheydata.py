@@ -5,11 +5,11 @@
 ##
 ##
 ## Contents adapted from emergent.unpythonic.net/software/hershey
-##  by way of http://www.thingiverse.com/thing:6168 
+##  by way of http://www.thingiverse.com/thing:6168
 ##
 ##"Standard" Font by Andrew Mustun (QCad - http://qcad.org)
 ##
-##The Hershey Fonts are a set of vector fonts with a liberal license. 
+##The Hershey Fonts are a set of vector fonts with a liberal license.
 ##
 ##USE RESTRICTION:
 ##  This distribution of the Hershey Fonts may be used by anyone for

@@ -22,7 +22,7 @@ class Session:
         self.start = datetime.datetime.now()
         self.machines = []
         self.emitters = []
-        
+
     def add(self, name="", path=""):
         fileName, fileExtension = os.path.splitext(path)
         if fileExtension == '.svg':
@@ -32,13 +32,13 @@ class Session:
             print("Adding machine for " + path)
             self.machines.append(Machine(name,path))
         return self
-    
+
     def machine(self, name):
         for m in self.machines:
             if m.name == name:
                 return m
         return False
-    
+
     def emitter(self,name):
         for e in self.emitters:
             if e.name == name:

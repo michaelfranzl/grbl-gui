@@ -31,4 +31,3 @@ grbl.write("M5") # laser off
 
 self.set_target("simulator")
 grbl.job_run()
-

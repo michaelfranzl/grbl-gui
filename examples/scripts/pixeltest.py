@@ -20,4 +20,3 @@ grbl.write(gcode)
 
 self.set_target("simulator")
 grbl.job_run()
-
