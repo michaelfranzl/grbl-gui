@@ -76,7 +76,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.wpos = (0, 0, 0)
         self.mpos = (0, 0, 0)
 
-        ## LOGGING SETUP BEGIN ------
+        # LOGGING SETUP BEGIN ------
         # setup ring buffer for logging
         self.changed_loginput = False
         self.logoutput_items = []
@@ -101,7 +101,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         font.setFamily("DejaVu Sans Mono")
         font.setPointSize(7)
         self.label_current_gcode.setFont(font)
-        ## LOGGING SETUP END ------
+        # LOGGING SETUP END ------
 
 
         # STATE VARIABLES BEGIN -----
@@ -117,7 +117,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
 
 
-        ## MENU BAR SETUP BEGIN ----------
+        # MENU BAR SETUP BEGIN ----------
         self.menuBar = QMenuBar(self)
 
         self.action_script_load = QAction("Open Script...", self)
@@ -152,9 +152,9 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.menu_grbl.addAction(self.action_grbl_disconnect)
         self.action_grbl_disconnect.setEnabled(False)
         self.action_grbl_connect.setEnabled(True)
-        ## MENU BAR SETUP END ----------
+        # MENU BAR SETUP END ----------
 
-        ## CS SETUP BEGIN ---------
+        # CS SETUP BEGIN ---------
         self.cs_names = {
             1: "G54",
             2: "G55",
@@ -168,7 +168,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         for key, val in self.cs_names.items():
             self.comboBox_coordinate_systems.insertItem(key, val)
         self.comboBox_coordinate_systems.activated.connect(self._cs_selected)
-        ## CS SETUP END ---------
+        # CS SETUP END ---------
 
 
         refresh_rate = 20
@@ -183,7 +183,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         #self.grbl.cnect()
 
 
-        ## SIGNALS AND SLOTS BEGIN-------
+        # SIGNALS AND SLOTS BEGIN-------
         self.comboBox_target.currentIndexChanged.connect(self._target_selected)
         self.pushButton_homing.clicked.connect(self.homing)
         self.pushButton_killalarm.clicked.connect(self.grbl.killalarm)
@@ -223,13 +223,13 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.pushButton_settings_upload_grbl.clicked.connect(self.settings_upload_to_grbl)
         self.pushButton_bbox.clicked.connect(self.bbox)
         self.tableWidget_variables.cellChanged.connect(self._variables_edited)
-        ## SIGNALS AND SLOTS END-------
+        # SIGNALS AND SLOTS END-------
 
 
         self._startup_disable_inputs()
 
 
-        ## TIMER SETUP BEGIN ----------
+        # TIMER SETUP BEGIN ----------
         self.timer = QTimer()
         self.timer.timeout.connect(self.on_timer)
         self.timer.start(150)
@@ -237,10 +237,10 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.timer_second = QTimer()
         self.timer_second.timeout.connect(self.on_second_tick)
         self.timer_second.start(1000)
-        ## TIMER SETUP END ----------
+        # TIMER SETUP END ----------
 
 
-        ## Keyboard shortcuts BEGIN ----------
+        # Keyboard shortcuts BEGIN ----------
         self._shortcut = QShortcut(QKeySequence(Qt.CTRL + Qt.Key_S), self)
         self._shortcut.activated.connect(self._save_script)
 
@@ -258,7 +258,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
 
         self._shortcut = QShortcut(QKeySequence(Qt.CTRL + Qt.Key_E), self)
         self._shortcut.activated.connect(self.execute_script_clicked)
-        ## Keyboard shortcuts END ----------
+        # Keyboard shortcuts END ----------
 
 
 
@@ -308,16 +308,16 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         with open("examples/scripts/blank.py", 'r') as f: c = f.read()
         self.plainTextEdit_script.setPlainText(c)
 
-        ## JOG WIDGET SETUP BEGIN -------------
+        # JOG WIDGET SETUP BEGIN -------------
         self.jogWidget = JogWidget(self, self.grbl.stream)
         self.gridLayout_jog_container.addWidget(self.jogWidget)
-        ## JOG WIDGET SETUP END -------------
+        # JOG WIDGET SETUP END -------------
 
         self.statusBar.showMessage("Ready", 3000)
 
 
-        ## SETTINGS SETUP BEGIN ---------------------
-        self.settings = QSettings("gerbil_gui.ini", QSettings.IniFormat)
+        # SETTINGS SETUP BEGIN ---------------------
+        self.settings = QSettings("grbl-gui.ini", QSettings.IniFormat)
 
         self._open_script_location = self.settings.value("open_script_location")
         if self._open_script_location == None:
@@ -1410,10 +1410,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         d = self._var_table_to_dict()
         self.grbl.preprocessor.vars = d
 
-
-
-
-    ## UTILITY FUNCTIONS
+    # UTILITY FUNCTIONS
 
     def _var_table_to_dict(self):
         row_count = self.tableWidget_variables.rowCount()
