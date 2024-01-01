@@ -17,19 +17,25 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with pyglpainter. If not, see <https://www.gnu.org/licenses/>.
 """
-from lib.qt.gerbil_gui.ui_simulatordialog import Ui_SimulatorDialog
+
+from PyQt5.QtWidgets import QWidget, QGridLayout
 
 from .simulatorwidget import SimulatorWidget
 
-from PyQt5 import QtCore, QtGui
-from PyQt5.QtCore import pyqtSignal, QPoint, QSize, Qt, QCoreApplication, QTimer
-from PyQt5.QtGui import QColor,QPalette
-from PyQt5.QtWidgets import QApplication, QHBoxLayout, QMessageBox, QSlider, QLabel, QPushButton, QWidget, QDialog, QMainWindow, QFileDialog, QLineEdit, QSpacerItem, QListWidgetItem, QMenuBar, QMenu, QAction, QTableWidgetItem, QDialog
 
-class SimulatorDialog(QWidget, Ui_SimulatorDialog):
-    def __init__(self, parent, refresh_rate=20):
-        super(SimulatorDialog, self).__init__()
-        self.setupUi(self)
+class SimulatorDialog(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setObjectName("SimulatorDialog")
+        self.resize(807, 550)
+        self.gridLayout_2 = QGridLayout(self)
+        self.gridLayout_2.setObjectName("gridLayout_2")
+        self.gridLayout = QGridLayout()
+        self.gridLayout.setObjectName("gridLayout")
+        self.gridLayout_simulator = QGridLayout()
+        self.gridLayout_simulator.setObjectName("gridLayout_simulator")
+        self.gridLayout.addLayout(self.gridLayout_simulator, 0, 0, 1, 2)
+        self.gridLayout_2.addLayout(self.gridLayout, 0, 0, 1, 1)
 
-        self.simulator_widget = SimulatorWidget(self, refresh_rate)
+        self.simulator_widget = SimulatorWidget(self)
         self.gridLayout_simulator.addWidget(self.simulator_widget)

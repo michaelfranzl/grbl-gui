@@ -41,7 +41,7 @@ from PyQt5.QtCore import pyqtSignal, QPoint, QSize, Qt, QCoreApplication, QTimer
 from PyQt5.QtGui import QColor, QPalette, QKeySequence
 from PyQt5.QtWidgets import QApplication, QHBoxLayout, QMessageBox, QSlider, QLabel, QPushButton, QWidget, QDialog, QMainWindow, QFileDialog, QLineEdit, QSpacerItem, QListWidgetItem, QMenuBar, QMenu, QAction, QTableWidgetItem, QDialog, QShortcut
 
-from lib.qt.gerbil_gui.ui_mainwindow import Ui_MainWindow
+from lib.qt.grbl_gui.ui_mainwindow import Ui_MainWindow
 from lib import gcodetools
 from lib import utility
 from lib import pixel2laser
@@ -165,7 +165,7 @@ class MainWindow(QMainWindow, Ui_MainWindow):
         self.comboBox_coordinate_systems.activated.connect(self._cs_selected)
         # CS SETUP END ---------
 
-        self.sim_dialog = SimulatorDialog(self)
+        self.sim_dialog = SimulatorDialog()
         self.sim_dialog.show()
 
         # GRBL SETUP BEGIN -----
