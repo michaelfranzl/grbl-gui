@@ -31,7 +31,7 @@ from lib import pixel2laser as p2l
 from lib import gcodetools
 from lib import utility
 
-from PyQt5.QtWidgets import (QApplication, QHBoxLayout, QMessageBox, QSlider, QWidget, QDialog, QMainWindow)
+from PyQt5.QtWidgets import QApplication
 
 from classes.window import MainWindow
 

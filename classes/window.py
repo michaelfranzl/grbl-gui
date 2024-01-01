@@ -35,10 +35,12 @@ from classes.simulatordialog import SimulatorDialog
 from grbl_streamer import GrblStreamer
 from gcode_machine import GcodeMachine
 
-from PyQt5 import QtCore, QtGui
-from PyQt5.QtCore import pyqtSignal, QPoint, QSize, Qt, QCoreApplication, QTimer, QSettings
-from PyQt5.QtGui import QColor, QPalette, QKeySequence
-from PyQt5.QtWidgets import QApplication, QHBoxLayout, QMessageBox, QSlider, QLabel, QPushButton, QWidget, QDialog, QMainWindow, QFileDialog, QLineEdit, QSpacerItem, QListWidgetItem, QMenuBar, QMenu, QAction, QTableWidgetItem, QDialog, QShortcut
+from PyQt5 import QtGui
+from PyQt5.QtCore import Qt, QTimer, QSettings
+from PyQt5.QtGui import QKeySequence
+from PyQt5.QtWidgets import (
+        QApplication, QLabel, QMainWindow, QFileDialog, QListWidgetItem,
+        QMenuBar, QAction, QTableWidgetItem, QShortcut)
 
 from lib.qt.grbl_gui.ui_mainwindow import Ui_MainWindow
 from lib import gcodetools

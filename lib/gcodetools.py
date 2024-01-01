@@ -20,7 +20,6 @@ along with pyglpainter. If not, see <https://www.gnu.org/licenses/>.
 
 import logging
 import re
-import numpy as np
 import math
 
 from scipy.interpolate import griddata
