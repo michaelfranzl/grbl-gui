@@ -73,7 +73,7 @@ pipenv install -d
 To start:
 
 ```sh
-pipenv run grbl-gui.py gui --path /dev/ttyUSB0 --baud=115200
+pipenv run ./grbl-gui.py gui --path /dev/ttyUSB0 --baud=115200
 ```
 
 ## Development
