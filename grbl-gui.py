@@ -246,6 +246,7 @@ def main():
 
     elif subcmd == "gui":
         app = QApplication(sys.argv)
+        app.setStyle('Fusion')
         window = MainWindow(args.path, int(args.baud))
         window.show()
         sys.exit(app.exec())
